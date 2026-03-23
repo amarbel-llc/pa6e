@@ -4,8 +4,19 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-bluer = { version = "0.17", features = ["rfcomm"] }
 tokio = { version = "1", features = ["net", "io-util", "macros", "rt-multi-thread", "time"] }
 image = "0.25"
 clap = { version = "4", features = ["derive"] }
 anyhow = "1"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+bluer = { version = "0.17", features = ["rfcomm"] }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = "0.6"
+objc2-io-bluetooth = { version = "0.3", features = [
+    "objc2",
+    "Bluetooth",
+    "IOBluetoothDevice",
+    "IOBluetoothRFCOMMChannel",
+] }

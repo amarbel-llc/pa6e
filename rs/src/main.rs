@@ -1,8 +1,8 @@
+mod bluetooth;
 mod image_prep;
 mod printer;
 
 use anyhow::{bail, Result};
-use bluer::Address;
 use clap::Parser;
 use std::path::PathBuf;
 
@@ -40,14 +40,14 @@ async fn main() -> Result<()> {
         other => bail!("unknown printer model: {other} (expected A6 or A6p)"),
     };
 
-    let mac: Address = cli.mac.parse().map_err(|e| anyhow::anyhow!("invalid MAC address: {e}"))?;
+    let address = bluetooth::parse_address(&cli.mac)?;
 
     eprintln!("preparing image: {}", cli.image.display());
     let (data, height) = image_prep::prepare(&cli.image, row_width)?;
     eprintln!("image: {row_width}x{height} pixels, {} bytes", data.len());
 
-    eprintln!("connecting to {mac}...");
-    let mut stream = printer::connect(mac).await?;
+    eprintln!("connecting to {address}...");
+    let mut stream = bluetooth::connect(&address).await?;
     eprintln!("connected");
 
     printer::reset(&mut stream).await?;
