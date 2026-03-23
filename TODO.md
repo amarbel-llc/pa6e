@@ -1,5 +1,0 @@
-- [ ] QR code printing (`-q` flag, `qrcode` crate)
-- [ ] Brightness/contrast adjustment (`-b` flag, pre-threshold image manipulation)
-- [ ] Device info queries (battery, firmware, serial number)
-- [ ] Paper feed size configuration
-- [ ] SVG input support
