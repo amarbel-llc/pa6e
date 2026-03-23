@@ -14,5 +14,10 @@ rs/target/
 # Nix
 result
 
+# Pipeline intermediates
+*-trimmed.png
+
 # Temp
 tmp/
+commit.bash
+html-to-pdf
