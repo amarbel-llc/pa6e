@@ -24,10 +24,13 @@ struct Cli {
     /// Concentration/heat level: 0, 1, or 2
     #[arg(short = 'c', long = "concentration", default_value_t = 1)]
     concentration: u8,
+
+    /// Paper feed amount after printing (0-255, default 120)
+    #[arg(short = 'f', long = "feed", default_value_t = 120)]
+    feed: u8,
 }
 
-#[tokio::main]
-async fn main() -> Result<()> {
+fn main() -> Result<()> {
     let cli = Cli::parse();
 
     if cli.concentration > 2 {
@@ -47,16 +50,18 @@ async fn main() -> Result<()> {
     eprintln!("image: {row_width}x{height} pixels, {} bytes", data.len());
 
     eprintln!("connecting to {address}...");
-    let mut stream = bluetooth::connect(&address).await?;
+    let mut stream = bluetooth::connect(&address)?;
     eprintln!("connected");
 
-    printer::reset(&mut stream).await?;
-    printer::set_concentration(&mut stream, cli.concentration).await?;
+    printer::reset(&mut stream)?;
+    printer::set_concentration(&mut stream, cli.concentration)?;
 
     eprintln!("printing {height} rows...");
-    printer::print_image(&mut stream, &data, row_bytes, height).await?;
+    printer::print_image(&mut stream, &data, row_bytes, height)?;
 
-    printer::feed_and_end(&mut stream).await?;
+    // Wait for the printer to finish spooling before sending feed
+    std::thread::sleep(std::time::Duration::from_secs(2));
+    printer::feed_and_end(&mut stream, cli.feed)?;
     eprintln!("done");
 
     Ok(())

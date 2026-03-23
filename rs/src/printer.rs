@@ -4,8 +4,9 @@ use std::time::Duration;
 
 use crate::bluetooth::RfcommStream;
 
-const MAX_CHUNK_ROWS: u16 = 255;
+const MAX_CHUNK_ROWS: u16 = 64;
 const ROW_DELAY: Duration = Duration::from_millis(10);
+const CHUNK_DELAY: Duration = Duration::from_millis(200);
 
 pub const A6_ROW_WIDTH: u32 = 384;
 pub const A6P_ROW_WIDTH: u32 = 576;
@@ -61,15 +62,14 @@ pub fn print_image(
         }
 
         rows_sent += chunk_height;
+        thread::sleep(CHUNK_DELAY);
     }
 
     Ok(())
 }
 
-pub fn feed_and_end(stream: &mut impl RfcommStream) -> Result<()> {
-    // Paper feed: 1b 4a 40
-    stream.write_all(&[0x1B, 0x4A, 0x40])?;
-    // End: 10 ff fe 45
+pub fn feed_and_end(stream: &mut impl RfcommStream, feed_amount: u8) -> Result<()> {
+    stream.write_all(&[0x1B, 0x4A, feed_amount])?;
     stream.write_all(&[0x10, 0xFF, 0xFE, 0x45])?;
     Ok(())
 }
