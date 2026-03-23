@@ -5,7 +5,7 @@ use std::time::Duration;
 use crate::bluetooth::RfcommStream;
 
 const MAX_CHUNK_ROWS: u16 = 255;
-const ROW_DELAY: Duration = Duration::from_millis(20);
+const ROW_DELAY: Duration = Duration::from_millis(10);
 
 pub const A6_ROW_WIDTH: u32 = 384;
 pub const A6P_ROW_WIDTH: u32 = 576;
