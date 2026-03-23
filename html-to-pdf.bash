@@ -1,52 +1,62 @@
-#!/usr/bin/env -S bash -e
+#!/usr/bin/env bash
+set -euo pipefail
 
-CMD_CHROME="$(which chromium 2>/dev/null || which google-chrome-stable 2>/dev/null)" || {
-  echo "error: chromium or google-chrome-stable must be on PATH" >&2
+# Find Chrome/Chromium binary
+if [[ "$(uname)" == "Darwin" ]]; then
+  CMD_CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+else
+  CMD_CHROME="$(which chromium)"
+fi
+
+if [[ ! -x $CMD_CHROME ]]; then
+  echo "error: Chrome/Chromium not found at $CMD_CHROME" >&2
   exit 1
-}
+fi
 
 target="$1"
 options="$2"
 buffer_size="${3:-9999999}"
-port="9222"
+
+cleanup() {
+  if [[ -n ${chrome_PID:-} ]]; then
+    kill -9 "$chrome_PID" 2>/dev/null || true
+    wait "$chrome_PID" 2>/dev/null || true
+  fi
+}
+trap cleanup EXIT
 
 echo "Running Chrome ($CMD_CHROME)" >&2
 coproc chrome (
   "$CMD_CHROME" \
     --no-sandbox \
     --headless \
-    --remote-debugging-port=$port \
-    --remote-allow-origins=http://127.0.0.1:$port \
-    --remote-allow-origins=http://localhost:$port \
+    --remote-debugging-port=0 \
+    --remote-allow-origins='*' \
     "$(realpath "$target")" 2>&1
 )
 
-# chrome appears to ignore SIGTERM in headless and continues running
-trap 'kill -9 $chrome_PID' EXIT
-read -r output <&"${chrome[0]}"
-echo "$output"
+# Read lines until we find the DevTools URL with the allocated port
+while IFS= read -r line <&"${chrome[0]}"; do
+  echo "$line" >&2
+  if [[ $line =~ DevTools\ listening\ on\ ws://([^/]+) ]]; then
+    host="${BASH_REMATCH[1]}"
+    break
+  fi
+done
 
-function get_websocket_debugger_url() {
-  http GET localhost:$port/json/list |
-    jq -r '.[] | select(.type == "page") | .webSocketDebuggerUrl'
-}
-
-echo "Getting chrome websocket debugger url" >&2
-url="$(get_websocket_debugger_url)"
-
-function request_print_page() {
-  echo "Page.printToPDF { $options }" |
-    websocat --buffer-size "$buffer_size" -n1 --jsonrpc --jsonrpc-omit-jsonrpc "$url"
-}
-
-if [[ -t 1 ]]; then
-  outfile="$target.pdf"
-else
-  outfile="/dev/stdout"
+if [[ -z ${host:-} ]]; then
+  echo "error: failed to get DevTools listening address from Chrome" >&2
+  exit 1
 fi
 
-echo "Requesting chrome print page from debugger url ($url)" >&2
-request_print_page |
+echo "Getting page websocket url from $host" >&2
+url="$(http --ignore-stdin GET "$host/json/list" | jq -r '.[] | select(.type == "page") | .webSocketDebuggerUrl')"
+
+echo "Requesting print from $url" >&2
+outfile="$target.pdf"
+
+echo "Page.printToPDF { $options }" |
+  websocat --buffer-size "$buffer_size" -n1 --jsonrpc --jsonrpc-omit-jsonrpc "$url" |
   jq -r '.result.data' |
   base64 -d -i - >"$outfile"
 
