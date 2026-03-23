@@ -13,18 +13,18 @@ pub use macos::BtAddress;
 /// A Bluetooth RFCOMM connection that supports writing data.
 pub trait RfcommStream {
     /// Write all bytes to the RFCOMM channel.
-    fn write_all(&mut self, data: &[u8]) -> impl std::future::Future<Output = Result<()>> + Send;
+    fn write_all(&mut self, data: &[u8]) -> Result<()>;
 }
 
 /// Connect to a Bluetooth device over RFCOMM channel 1.
-pub async fn connect(address: &BtAddress) -> Result<impl RfcommStream> {
+pub fn connect(address: &BtAddress) -> Result<impl RfcommStream> {
     #[cfg(target_os = "linux")]
     {
-        linux::connect(address).await
+        linux::connect(address)
     }
     #[cfg(target_os = "macos")]
     {
-        macos::connect(address).await
+        macos::connect(address)
     }
 }
 

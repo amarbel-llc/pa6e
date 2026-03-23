@@ -12,9 +12,11 @@ pub struct BluerStream {
 }
 
 impl super::RfcommStream for BluerStream {
-    async fn write_all(&mut self, data: &[u8]) -> Result<()> {
-        self.inner.write_all(data).await?;
-        Ok(())
+    fn write_all(&mut self, data: &[u8]) -> Result<()> {
+        tokio::runtime::Handle::current().block_on(async {
+            self.inner.write_all(data).await?;
+            Ok(())
+        })
     }
 }
 
@@ -23,12 +25,17 @@ pub fn parse_address(s: &str) -> Result<BtAddress> {
         .map_err(|e| anyhow::anyhow!("invalid MAC address: {e}"))
 }
 
-pub async fn connect(address: &BtAddress) -> Result<BluerStream> {
-    let socket = Socket::new()?;
-    let addr = SocketAddr::new(*address, RFCOMM_CHANNEL);
-    let stream = socket
-        .connect(addr)
-        .await
-        .with_context(|| format!("failed to connect to {address} on channel {RFCOMM_CHANNEL}"))?;
-    Ok(BluerStream { inner: stream })
+pub fn connect(address: &BtAddress) -> Result<BluerStream> {
+    let rt = tokio::runtime::Runtime::new().context("failed to create tokio runtime")?;
+    rt.block_on(async {
+        let socket = Socket::new()?;
+        let addr = SocketAddr::new(*address, RFCOMM_CHANNEL);
+        let stream = socket
+            .connect(addr)
+            .await
+            .with_context(|| {
+                format!("failed to connect to {address} on channel {RFCOMM_CHANNEL}")
+            })?;
+        Ok(BluerStream { inner: stream })
+    })
 }
