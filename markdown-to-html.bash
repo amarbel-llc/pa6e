@@ -8,6 +8,9 @@ fi
 dir_nix_store="$(realpath "$(dirname "$0")/../")"
 
 target="$1"
+width_px="${2:-384}"
+
+paper_width_in="2.2409"
 
 pandoc \
   --output "$target.html" \
@@ -16,8 +19,11 @@ pandoc \
   --css "$dir_nix_store/peri-a6.css" \
   "$target" 2>/dev/null
 
-html-to-pdf "$target.html" '"paperWidth": 2.2409, "marginLeft": 0, "marginRight": 0'
-magick -density 300 "$target.html.pdf" -background white -flatten -resize 50% "$target.html.pdf.png"
+html-to-pdf "$target.html" '"paperWidth": '"$paper_width_in"', "marginLeft": 0, "marginRight": 0'
+
+# Render at 2x target DPI for quality, then resize to exact printer width.
+render_dpi=$(echo "$width_px $paper_width_in" | awk '{printf "%d", ($1 / $2) * 2}')
+magick -density "$render_dpi" "$target.html.pdf" -background white -flatten -resize "${width_px}" "$target.html.pdf.png"
 magick "$target.html.pdf.png" -gravity North \
   -background white -splice 0x1 \
   -background black -splice 0x1 \
