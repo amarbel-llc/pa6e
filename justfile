@@ -1,7 +1,8 @@
 
-secret-edit:
-  git secret reveal
-  ${EDITOR:-${VISUAL:-vi}} .env
-  git secret hide
-  git add .env.secret
-  git add .gitsecret
+build: build-cargo build-nix
+
+build-cargo:
+  cd rs && cargo build
+
+build-nix:
+  nix build --show-trace
