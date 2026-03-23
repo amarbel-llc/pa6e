@@ -16,25 +16,35 @@ Two-stage pipeline: nix flake builds the image, then a separate script sends it
 to the printer.
 
 **Stage 1 --- Image generation** (`markdown-to-html.bash`, wrapped as
-`pa6e-markdown-to-html` by the nix flake): 1. pandoc: markdown → standalone HTML
-(embeds `peri-a6.css` which only applies via `@media print`) 2. html-to-pdf:
-HTML → PDF (chromium headless, 57mm/2.2409in paper width, zero side margins) 3.
-imagemagick: PDF → PNG at 300dpi, then trim whitespace via North-gravity
-splice+chop trick 4. Outputs `<input>-trimmed.html.pdf.png`
+`pa6e-markdown-to-html` by the nix flake):
 
-**Stage 2 --- Printing** (`print_label.bash`): - Runs `nix run . label.md`,
-moves output to `old/`, invokes the Rust `pa6e` binary - Uses `peri_secondary`
-MAC address with concentration level 2
+1.  pandoc: markdown → standalone HTML (embeds `peri-a6.css` which only applies
+    via `@media print`)
+2.  html-to-pdf: HTML → PDF (chromium headless, 57mm/2.2409in paper width, zero
+    side margins)
+3.  imagemagick: PDF → PNG at 300dpi, then trim whitespace via North-gravity
+    splice+chop trick
+4.  Outputs `<input>-trimmed.html.pdf.png`
 
-**Rust CLI** (`rs/` --- built as `pa6e` by the nix flake): - Loads PNG, resizes
-to printer width (384px A6 / 576px A6+), converts to 1-bit monochrome - Connects
-via Bluetooth RFCOMM (async, bluer/tokio), sends packed row data with 10ms
-inter-row delay - Usage: `pa6e -p A6p -m MAC_ADDRESS -i image.png -c 2`
-(concentration: 0/1/2)
+**Stage 2 --- Printing** (`print_label.bash`):
 
-**Supporting files:** - `peri-a6.css` --- Print stylesheet (Azuro TF font,
-`@media print` only) - `label.md` --- Source content for labels - `old/` ---
-Working directory used by `print_label.bash`
+- Runs `nix run . label.md`, moves output to `old/`, invokes the Rust `pa6e`
+  binary
+- Uses `peri_secondary` MAC address with concentration level 2
+
+**Rust CLI** (`rs/` --- built as `pa6e` by the nix flake):
+
+- Loads PNG, resizes to printer width (384px A6 / 576px A6+), converts to 1-bit
+  monochrome
+- Connects via Bluetooth RFCOMM (async, bluer/tokio), sends packed row data with
+  10ms inter-row delay
+- Usage: `pa6e -p A6p -m MAC_ADDRESS -i image.png -c 2` (concentration: 0/1/2)
+
+**Supporting files:**
+
+- `peri-a6.css` --- Print stylesheet (Azuro TF font, `@media print` only)
+- `label.md` --- Source content for labels
+- `old/` --- Working directory used by `print_label.bash`
 
 ## Build & Run
 
