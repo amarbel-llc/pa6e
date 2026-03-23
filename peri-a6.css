@@ -39,6 +39,14 @@
     padding-left: 2ex;
   }
 
+  ul.task-list {
+    padding-left: 2em;
+  }
+
+  ul.task-list li input[type="checkbox"] {
+    margin-left: -1.4em;
+  }
+
   ul li {
     margin-bottom: 6px;
   }

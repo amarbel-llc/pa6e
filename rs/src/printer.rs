@@ -1,10 +1,11 @@
 use anyhow::Result;
+use std::thread;
 use std::time::Duration;
 
 use crate::bluetooth::RfcommStream;
 
 const MAX_CHUNK_ROWS: u16 = 255;
-const ROW_DELAY: Duration = Duration::from_millis(10);
+const ROW_DELAY: Duration = Duration::from_millis(20);
 
 pub const A6_ROW_WIDTH: u32 = 384;
 pub const A6P_ROW_WIDTH: u32 = 576;
@@ -12,20 +13,20 @@ pub const A6P_ROW_WIDTH: u32 = 576;
 pub const A6_ROW_BYTES: u8 = 48;
 pub const A6P_ROW_BYTES: u8 = 72;
 
-pub async fn reset(stream: &mut impl RfcommStream) -> Result<()> {
+pub fn reset(stream: &mut impl RfcommStream) -> Result<()> {
     let mut cmd = vec![0x10, 0xFF, 0xFE, 0x01];
     cmd.extend_from_slice(&[0u8; 12]);
-    stream.write_all(&cmd).await?;
+    stream.write_all(&cmd)?;
     Ok(())
 }
 
-pub async fn set_concentration(stream: &mut impl RfcommStream, level: u8) -> Result<()> {
+pub fn set_concentration(stream: &mut impl RfcommStream, level: u8) -> Result<()> {
     let cmd = [0x10, 0xFF, 0x10, 0x00, level];
-    stream.write_all(&cmd).await?;
+    stream.write_all(&cmd)?;
     Ok(())
 }
 
-pub async fn print_image(
+pub fn print_image(
     stream: &mut impl RfcommStream,
     data: &[u8],
     row_bytes: u8,
@@ -38,7 +39,8 @@ pub async fn print_image(
         let remaining = height - rows_sent;
         let chunk_height = remaining.min(MAX_CHUNK_ROWS);
 
-        // Print preamble: 1d 76 30 00 [row_bytes] 00 [chunk_height] 00
+        reset(stream)?;
+
         let preamble = [
             0x1D,
             0x76,
@@ -49,13 +51,13 @@ pub async fn print_image(
             chunk_height as u8,
             0x00,
         ];
-        stream.write_all(&preamble).await?;
+        stream.write_all(&preamble)?;
 
         for row in 0..chunk_height {
             let offset = (rows_sent + row) as usize * rb;
             let row_data = &data[offset..offset + rb];
-            stream.write_all(row_data).await?;
-            tokio::time::sleep(ROW_DELAY).await;
+            stream.write_all(row_data)?;
+            thread::sleep(ROW_DELAY);
         }
 
         rows_sent += chunk_height;
@@ -64,10 +66,10 @@ pub async fn print_image(
     Ok(())
 }
 
-pub async fn feed_and_end(stream: &mut impl RfcommStream) -> Result<()> {
+pub fn feed_and_end(stream: &mut impl RfcommStream) -> Result<()> {
     // Paper feed: 1b 4a 40
-    stream.write_all(&[0x1B, 0x4A, 0x40]).await?;
+    stream.write_all(&[0x1B, 0x4A, 0x40])?;
     // End: 10 ff fe 45
-    stream.write_all(&[0x10, 0xFF, 0xFE, 0x45]).await?;
+    stream.write_all(&[0x10, 0xFF, 0xFE, 0x45])?;
     Ok(())
 }
