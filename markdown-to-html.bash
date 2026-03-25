@@ -1,5 +1,10 @@
 #! /usr/bin/env -S bash -e
 
+if ! command -v chromium &>/dev/null && ! command -v google-chrome-stable &>/dev/null; then
+  echo "error: chromium or google-chrome-stable must be on PATH" >&2
+  exit 1
+fi
+
 dir_nix_store="$(realpath "$(dirname "$0")/../")"
 
 target="$1"

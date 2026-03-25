@@ -1,13 +1,11 @@
 {
-  description = "a bash script that takes an HTML file and uses Chromium to
-  render it as a PDF. Chromium is not from nix right now because of Darwin";
+  description = "Toolset for printing to Peripage A6 thermal printers via
+  Bluetooth. Chromium must be on PATH at runtime (not packaged).";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/fea3b367d61c1a6592bc47c72f40a9f3e6a53e96";
     nixpkgs-master.url = "github:NixOS/nixpkgs/c7673e9a9a58dde446a5fe1d089d6cc12aa41238";
     utils.url = "https://flakehub.com/f/numtide/flake-utils/0.1.102";
-
-    chromium-html-to-pdf.url = "github:friedenberg/chromium-html-to-pdf";
   };
 
   outputs =
@@ -16,7 +14,6 @@
       nixpkgs,
       nixpkgs-master,
       utils,
-      chromium-html-to-pdf,
     }:
     utils.lib.eachSystem [ "x86_64-linux" "aarch64-linux" ] (
       system:
@@ -25,11 +22,19 @@
           inherit system;
         };
         name = "pa6e-markdown-to-html";
+        html-to-pdf =
+          (pkgs.writeScriptBin "html-to-pdf" (builtins.readFile ./html-to-pdf.bash)).overrideAttrs
+            (old: {
+              buildCommand = "${old.buildCommand}\n patchShebangs $out";
+            });
         buildInputs = with pkgs; [
           bluez
           imagemagick
           pandoc
-          chromium-html-to-pdf.packages.${system}.html-to-pdf
+          httpie
+          websocat
+          jq
+          html-to-pdf
         ];
         pa6e-markdown-to-html =
           (pkgs.writeScriptBin name (builtins.readFile ./markdown-to-html.bash)).overrideAttrs
@@ -73,11 +78,13 @@
               bluez
               imagemagick
               pandoc
+              httpie
+              websocat
+              jq
               cargo
               rustc
               pkg-config
               dbus
-              chromium-html-to-pdf.packages.${system}.html-to-pdf
             ]
           );
 

@@ -49,8 +49,10 @@ to the printer.
 ## Build & Run
 
 Linux only (`x86_64-linux`, `aarch64-linux`). Uses nix flakes + direnv. The dev
-shell provides: `bluez`, `imagemagick`, `pandoc`, `chromium-html-to-pdf`,
-`cargo`, `rustc`, `pkg-config`, `dbus`.
+shell provides: `bluez`, `imagemagick`, `pandoc`, `httpie`, `websocat`, `jq`,
+`cargo`, `rustc`, `pkg-config`, `dbus`. **Chromium is not packaged** --- it must
+be on PATH at runtime (e.g. system-installed `chromium` or
+`google-chrome-stable`).
 
 ``` bash
 direnv allow                      # enter dev environment
@@ -70,14 +72,21 @@ nix build .#pa6e                  # build via nix
 just secret-edit    # Reveal, edit, and re-hide .env secrets (git-secret)
 ```
 
+## Design Constraints
+
+- Chromium headless is the only viable HTML-to-PDF renderer. Alternatives
+  (weasyprint, wkhtmltopdf, prince, etc.) have inadequate CSS support and poor
+  `@media print` handling compared to Chrome. Do not suggest replacing it.
+
 ## Key Details
 
 - Printer MAC addresses exported in `.envrc` (`peri_primary`, `peri_secondary`)
 - Secrets managed with `git-secret`; `.env` must be revealed for deployments
 - The nix flake wraps `markdown-to-html.bash` via `writeScriptBin` +
   `symlinkJoin` + `wrapProgram` so all dependencies are on PATH
-- `chromium-html-to-pdf` comes from `github:friedenberg/chromium-html-to-pdf`
-  flake input
+- `html-to-pdf` is an inlined bash script (`html-to-pdf.bash`) that launches
+  Chromium headless, connects via WebSocket debugging protocol, and calls
+  `Page.printToPDF`. Requires `chromium` on PATH (not packaged by the flake).
 - Printer native X resolution is 384 pixels
 - Two nix packages: `pa6e-markdown-to-html` (default, stage 1 bash pipeline) and
   `pa6e` (Rust printer CLI)
