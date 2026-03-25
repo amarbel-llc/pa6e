@@ -28,7 +28,6 @@
               buildCommand = "${old.buildCommand}\n patchShebangs $out";
             });
         buildInputs = with pkgs; [
-          bluez
           imagemagick
           pandoc
           httpie
