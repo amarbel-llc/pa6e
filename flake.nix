@@ -51,8 +51,10 @@
           buildInputs = with pkgs; [ dbus ];
         };
 
-        # to include all the templates and styles
-        src = ./.;
+        src = pkgs.runCommand "pa6e-assets" { } ''
+          mkdir -p $out
+          cp ${./peri-a6.css} $out/peri-a6.css
+        '';
 
       in
       rec {

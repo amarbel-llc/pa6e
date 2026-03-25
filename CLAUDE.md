@@ -28,8 +28,7 @@ to the printer.
 
 **Stage 2 --- Printing** (`print_label.bash`):
 
-- Runs `nix run . label.md`, moves output to `old/`, invokes the Rust `pa6e`
-  binary
+- Runs `nix run . label.md`, then invokes the Rust `pa6e` binary on the output
 - Uses `peri_secondary` MAC address with concentration level 2
 
 **Rust CLI** (`rs/` --- built as `pa6e` by the nix flake):
@@ -44,7 +43,6 @@ to the printer.
 
 - `peri-a6.css` --- Print stylesheet (Azuro TF font, `@media print` only)
 - `label.md` --- Source content for labels
-- `old/` --- Working directory used by `print_label.bash`
 
 ## Build & Run
 
