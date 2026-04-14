@@ -65,6 +65,21 @@
             postBuild = "wrapProgram $out/bin/html-to-pdf --prefix PATH : $out/bin";
           };
 
+          pa6e-manpages = pkgs.stdenvNoCC.mkDerivation {
+            pname = "pa6e-manpages";
+            version = "0.1.0";
+            src = ./doc;
+            nativeBuildInputs = [ pkgs.scdoc ];
+            dontUnpack = true;
+            dontBuild = true;
+            installPhase = ''
+              mkdir -p $out/share/man/man1
+              for f in $src/*.1.scd; do
+                scdoc < "$f" > "$out/share/man/man1/$(basename "$f" .scd)"
+              done
+            '';
+          };
+
           print-deps = [
             pa6e
             html-to-pdf-wrapped
@@ -83,6 +98,7 @@
             name = "pa6e-print";
             paths = [
               pa6e-print-unwrapped
+              pa6e-manpages
               ./.
             ]
             ++ print-deps;
