@@ -14,9 +14,13 @@ else
   exit 1
 fi
 
+if [[ -z ${peri_primary:-} && -f "$css_dir/.env" ]]; then
+  source "$css_dir/.env"
+fi
+
 target="$1"
-mac="${2:-}"
-model="${3:-A6}"
+mac="${2:-${peri_primary:-}}"
+model="${3:-A6p}"
 concentration="${4:-2}"
 
 # Derive printer width from model
