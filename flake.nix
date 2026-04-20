@@ -1,11 +1,16 @@
 {
-  description = "Toolset for printing to Peripage A6 thermal printers via
-  Bluetooth. Chromium must be on PATH at runtime (not packaged).";
+  description = "Toolset for printing to Peripage A6 thermal printers via Bluetooth.";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/fea3b367d61c1a6592bc47c72f40a9f3e6a53e96";
     nixpkgs-master.url = "github:NixOS/nixpkgs/c7673e9a9a58dde446a5fe1d089d6cc12aa41238";
     utils.url = "https://flakehub.com/f/numtide/flake-utils/0.1.102";
+
+    chrest = {
+      url = "github:amarbel-llc/chrest";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.utils.follows = "utils";
+    };
   };
 
   outputs =
@@ -14,6 +19,7 @@
       nixpkgs,
       nixpkgs-master,
       utils,
+      chrest,
     }:
     utils.lib.eachSystem
       [
@@ -47,19 +53,17 @@
             }
           );
 
-          html-to-pdf-script = pkgs.writeText "html-to-pdf.mjs" (builtins.readFile ./html-to-pdf.mjs);
+          html-to-pdf-unwrapped =
+            (pkgs.writeScriptBin "html-to-pdf" (builtins.readFile ./html-to-pdf.bash)).overrideAttrs
+              (old: {
+                buildCommand = "${old.buildCommand}\n patchShebangs $out";
+              });
 
-          html-to-pdf = pkgs.writeShellScriptBin "html-to-pdf" ''
-            exec ${pkgs.nodePackages.zx}/bin/zx ${html-to-pdf-script} "$@"
-          '';
-
-          html-to-pdf-wrapped = pkgs.symlinkJoin {
+          html-to-pdf = pkgs.symlinkJoin {
             name = "html-to-pdf";
             paths = [
-              html-to-pdf
-            ]
-            ++ pkgs.lib.optionals isLinux [
-              pkgs.chromium
+              html-to-pdf-unwrapped
+              chrest.packages.${system}.default
             ];
             buildInputs = [ pkgs.makeWrapper ];
             postBuild = "wrapProgram $out/bin/html-to-pdf --prefix PATH : $out/bin";
@@ -82,7 +86,7 @@
 
           print-deps = [
             pa6e
-            html-to-pdf-wrapped
+            html-to-pdf
             pkgs.pandoc
             pkgs.imagemagick
             pkgs.ghostscript_headless
@@ -120,17 +124,18 @@
                   imagemagick
                   ghostscript_headless
                   pandoc
-                  nodePackages.zx
                   cargo
                   rustc
                   pkg-config
                 ])
+                ++ [
+                  chrest.packages.${system}.default
+                ]
                 ++ pkgs.lib.optionals isLinux (
                   with pkgs;
                   [
                     bluez
                     dbus
-                    chromium
                   ]
                 )
                 ++ pkgs.lib.optionals isDarwin [

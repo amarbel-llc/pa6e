@@ -10,6 +10,7 @@
 
 # Rust
 rs/target/
+target/
 
 # Nix
 result

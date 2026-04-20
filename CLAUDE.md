@@ -15,16 +15,15 @@ ESC/POS.
 Two-stage pipeline: nix flake builds the image, then a separate script sends it
 to the printer.
 
-**Stage 1 --- Image generation** (`markdown-to-html.bash`, wrapped as
-`pa6e-markdown-to-html` by the nix flake):
+**Stage 1 --- Image generation** (`pa6e-print.bash`, wrapped as `pa6e-print` by
+the nix flake):
 
-1.  pandoc: markdown → standalone HTML (embeds `peri-a6.css` which only applies
+1.  pandoc: markdown -> standalone HTML (embeds `peri-a6.css` which only applies
     via `@media print`)
-2.  html-to-pdf: HTML → PDF (chromium headless, 57mm/2.2409in paper width, zero
-    side margins)
-3.  imagemagick: PDF → PNG at 300dpi, then trim whitespace via North-gravity
-    splice+chop trick
-4.  Outputs `<input>-trimmed.html.pdf.png`
+2.  html-to-pdf: HTML -> PDF via chrest (Firefox headless, 57mm/2.2409in paper
+    width, zero side margins)
+3.  imagemagick: PDF -> PNG, then trim whitespace via North-gravity splice+chop
+4.  Outputs `<input>-trimmed.png`
 
 **Stage 2 --- Printing** (`print_label.bash`):
 
@@ -46,11 +45,9 @@ to the printer.
 
 ## Build & Run
 
-Linux only (`x86_64-linux`, `aarch64-linux`). Uses nix flakes + direnv. The dev
-shell provides: `bluez`, `imagemagick`, `pandoc`, `httpie`, `websocat`, `jq`,
-`cargo`, `rustc`, `pkg-config`, `dbus`. **Chromium is not packaged** --- it must
-be on PATH at runtime (e.g. system-installed `chromium` or
-`google-chrome-stable`).
+Supports `x86_64-linux`, `aarch64-linux`, and `aarch64-darwin`. Uses nix flakes +
+direnv. The dev shell provides: `bluez` (Linux), `imagemagick`, `pandoc`,
+`chrest`, `cargo`, `rustc`, `pkg-config`, `dbus` (Linux).
 
 ``` bash
 direnv allow                      # enter dev environment
@@ -72,21 +69,19 @@ just secret-edit    # Reveal, edit, and re-hide .env secrets (git-secret)
 
 ## Design Constraints
 
-- Chromium headless is the only viable HTML-to-PDF renderer. Alternatives
-  (weasyprint, wkhtmltopdf, prince, etc.) have inadequate CSS support and poor
-  `@media print` handling compared to Chrome. Do not suggest replacing it.
+- chrest (Firefox headless) handles HTML-to-PDF rendering. The `html-to-pdf.bash`
+  wrapper calls `chrest capture --format pdf` with `--paper-width 2.2409` and
+  zero side margins.
 
 ## Key Details
 
 - Printer MAC addresses exported in `.envrc` (`peri_primary`, `peri_secondary`)
 - Secrets managed with `git-secret`; `.env` must be revealed for deployments
-- The nix flake wraps `markdown-to-html.bash` via `writeScriptBin` +
-  `symlinkJoin` + `wrapProgram` so all dependencies are on PATH
-- `html-to-pdf` is an inlined bash script (`html-to-pdf.bash`) that launches
-  Chromium headless, connects via WebSocket debugging protocol, and calls
-  `Page.printToPDF`. Requires `chromium` on PATH (not packaged by the flake).
+- The nix flake wraps `pa6e-print.bash` via `writeScriptBin` + `symlinkJoin` +
+  `wrapProgram` so all dependencies (including chrest) are on PATH
+- `html-to-pdf` is a thin wrapper around `chrest capture --format pdf`
 - Printer native X resolution is 384 pixels
-- Two nix packages: `pa6e-markdown-to-html` (default, stage 1 bash pipeline) and
-  `pa6e` (Rust printer CLI)
+- Two nix packages: `pa6e-print` (default, stage 1 bash pipeline) and `pa6e`
+  (Rust printer CLI)
 - `rs/` requires `dbus` and `pkg-config` as native build inputs (for bluer/bluez
   bindings)

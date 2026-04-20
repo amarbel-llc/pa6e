@@ -41,8 +41,7 @@ pandoc \
   "$target" 2>/dev/null
 
 echo "rendering HTML to PDF..." >&2
-html-to-pdf "$target.html" \
-  "\"paperWidth\": $paper_width_in, \"marginLeft\": 0, \"marginRight\": 0"
+html-to-pdf "$target.html"
 
 echo "rasterizing PDF to PNG..." >&2
 render_dpi=$(echo "$width_px $paper_width_in" | awk '{printf "%d", ($1 / $2) * 2}')
