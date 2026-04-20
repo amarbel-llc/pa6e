@@ -41,10 +41,25 @@
 
   ul.task-list {
     padding-left: 2em;
+    list-style: none;
   }
 
   ul.task-list li input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 0.65em;
+    height: 0.65em;
+    border: 1.5pt solid black;
+    border-radius: 1px;
     margin-left: -1.4em;
+    margin-right: 0.3em;
+    vertical-align: middle;
+    position: relative;
+    top: 1pt;
+  }
+
+  ul.task-list li input[type="checkbox"]:checked {
+    background: black;
   }
 
   ul li {
@@ -54,9 +69,5 @@
   li::before {
     font-family: "Azuro TF";
     font-variant-numeric: tabular-nums;
-  }
-
-  @page {
-    size: 57mm 100mm;
   }
 }
