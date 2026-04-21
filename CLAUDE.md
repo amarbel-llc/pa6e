@@ -12,31 +12,24 @@ ESC/POS.
 
 ## Architecture
 
-Two-stage pipeline: nix flake builds the image, then a separate script sends it
-to the printer.
+Single Rust binary (`pa6e`) with two subcommands:
 
-**Stage 1 --- Image generation** (`pa6e-print.bash`, wrapped as `pa6e-print` by
-the nix flake):
+**`pa6e print`** --- full markdown-to-image pipeline (and optional printing):
 
-1.  pandoc: markdown -> standalone HTML (embeds `peri-a6.css` which only applies
-    via `@media print`)
-2.  html-to-pdf: HTML -> PDF via chrest (Firefox headless, 57mm/2.2409in paper
-    width, zero side margins)
-3.  imagemagick: PDF -> PNG, then trim whitespace via North-gravity splice+chop
+1.  pandoc: markdown -> standalone HTML (embeds `peri-a6.css` via `@media print`)
+2.  chrest: HTML -> PDF (Firefox headless, 57mm/2.2409in paper width, zero side
+    margins)
+3.  imagemagick: PDF -> PNG at printer-native resolution, then trim whitespace
+    via North-gravity splice+chop
 4.  Outputs `<input>-trimmed.png`
+5.  If `--mac` is provided, sends the image to the printer via Bluetooth
 
-**Stage 2 --- Printing** (`print_label.bash`):
+**`pa6e send`** --- sends a pre-rendered PNG image to the printer over Bluetooth.
+Resizes to printer width (384px A6 / 576px A6+), converts to 1-bit monochrome,
+transmits as packed row data via RFCOMM.
 
-- Runs `nix run . label.md`, then invokes the Rust `pa6e` binary on the output
-- Uses `peri_secondary` MAC address with concentration level 2
-
-**Rust CLI** (`rs/` --- built as `pa6e` by the nix flake):
-
-- Loads PNG, resizes to printer width (384px A6 / 576px A6+), converts to 1-bit
-  monochrome
-- Connects via Bluetooth RFCOMM (async, bluer/tokio), sends packed row data with
-  10ms inter-row delay
-- Usage: `pa6e -p A6p -m MAC_ADDRESS -i image.png -c 2` (concentration: 0/1/2)
+**CSS resolution:** `--css` flag > `PA6E_CSS_PATH` (burned in at build time by
+nix) > `./peri-a6.css` in the working directory.
 
 **Supporting files:**
 
@@ -52,13 +45,15 @@ direnv. The dev shell provides: `bluez` (Linux), `imagemagick`, `pandoc`,
 ``` bash
 direnv allow                      # enter dev environment
 
-nix run . label.md                # build image only (stage 1)
-./print_label.bash                # build + print label (stages 1+2)
-
-# Rust CLI (rs/)
+# Build
 cd rs && cargo build              # build pa6e binary
 cd rs && cargo test               # run tests
-nix build .#pa6e                  # build via nix
+nix build                         # build wrapped binary via nix
+
+# Run
+nix run . -- print label.md                        # generate image only
+nix run . -- print label.md -m AA:BB:CC:DD:EE:FF   # generate + print
+nix run . -- send -m AA:BB:CC:DD:EE:FF -i img.png  # send pre-rendered image
 ```
 
 ## Justfile Commands
@@ -69,19 +64,19 @@ just secret-edit    # Reveal, edit, and re-hide .env secrets (git-secret)
 
 ## Design Constraints
 
-- chrest (Firefox headless) handles HTML-to-PDF rendering. The `html-to-pdf.bash`
-  wrapper calls `chrest capture --format pdf` with `--paper-width 2.2409` and
-  zero side margins.
+- chrest (Firefox headless) handles HTML-to-PDF rendering via
+  `chrest capture --format pdf` with `--paper-width 2.2409` and zero side margins
+- Future: chrest `--viewport-width` (chrest#42) will allow direct HTML-to-PNG,
+  eliminating imagemagick and ghostscript from the pipeline
 
 ## Key Details
 
 - Printer MAC addresses exported in `.envrc` (`peri_primary`, `peri_secondary`)
 - Secrets managed with `git-secret`; `.env` must be revealed for deployments
-- The nix flake wraps `pa6e-print.bash` via `writeScriptBin` + `symlinkJoin` +
-  `wrapProgram` so all dependencies (including chrest) are on PATH
-- `html-to-pdf` is a thin wrapper around `chrest capture --format pdf`
-- Printer native X resolution is 384 pixels
-- Two nix packages: `pa6e-print` (default, stage 1 bash pipeline) and `pa6e`
-  (Rust printer CLI)
-- `rs/` requires `dbus` and `pkg-config` as native build inputs (for bluer/bluez
-  bindings)
+- The nix flake wraps `pa6e` binary via `symlinkJoin` + `wrapProgram` so runtime
+  dependencies (chrest, pandoc, imagemagick, ghostscript) are on PATH
+- `PA6E_CSS_PATH` is set at build time by nix, pointing to `peri-a6.css` in the
+  nix store; overridable with `--css` at runtime
+- Printer native X resolution: 384 pixels (A6) / 576 pixels (A6+)
+- `rs/` requires `dbus` and `pkg-config` as native build inputs on Linux (for
+  bluer/bluez bindings)

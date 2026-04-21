@@ -37,6 +37,11 @@
           isLinux = pkgs.stdenv.hostPlatform.isLinux;
           isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
 
+          css = pkgs.runCommand "pa6e-css" { } ''
+            mkdir -p $out/share/pa6e
+            cp ${./peri-a6.css} $out/share/pa6e/peri-a6.css
+          '';
+
           pa6e = pkgs.rustPlatform.buildRustPackage (
             {
               pname = "pa6e";
@@ -44,6 +49,7 @@
               src = ./rs;
               cargoLock.lockFile = ./rs/Cargo.lock;
               nativeBuildInputs = with pkgs; [ pkg-config ];
+              PA6E_CSS_PATH = "${css}/share/pa6e/peri-a6.css";
             }
             // pkgs.lib.optionalAttrs isLinux {
               buildInputs = with pkgs; [ dbus ];
@@ -53,20 +59,20 @@
             }
           );
 
-          html-to-pdf-unwrapped =
-            (pkgs.writeScriptBin "html-to-pdf" (builtins.readFile ./html-to-pdf.bash)).overrideAttrs
-              (old: {
-                buildCommand = "${old.buildCommand}\n patchShebangs $out";
-              });
-
-          html-to-pdf = pkgs.symlinkJoin {
-            name = "html-to-pdf";
-            paths = [
-              html-to-pdf-unwrapped
-              chrest.packages.${system}.default
-            ];
+          pa6e-wrapped = pkgs.symlinkJoin {
+            name = "pa6e";
+            paths = [ pa6e ];
             buildInputs = [ pkgs.makeWrapper ];
-            postBuild = "wrapProgram $out/bin/html-to-pdf --prefix PATH : $out/bin";
+            postBuild = ''
+              wrapProgram $out/bin/pa6e --prefix PATH : ${
+                pkgs.lib.makeBinPath [
+                  chrest.packages.${system}.default
+                  pkgs.pandoc
+                  pkgs.imagemagick
+                  pkgs.ghostscript_headless
+                ]
+              }
+            '';
           };
 
           pa6e-manpages = pkgs.stdenvNoCC.mkDerivation {
@@ -84,37 +90,11 @@
             '';
           };
 
-          print-deps = [
-            pa6e
-            html-to-pdf
-            pkgs.pandoc
-            pkgs.imagemagick
-            pkgs.ghostscript_headless
-          ];
-
-          pa6e-print-unwrapped =
-            (pkgs.writeScriptBin "pa6e-print" (builtins.readFile ./pa6e-print.bash)).overrideAttrs
-              (old: {
-                buildCommand = "${old.buildCommand}\n patchShebangs $out";
-              });
-
-          pa6e-print = pkgs.symlinkJoin {
-            name = "pa6e-print";
-            paths = [
-              pa6e-print-unwrapped
-              pa6e-manpages
-              ./.
-            ]
-            ++ print-deps;
-            buildInputs = [ pkgs.makeWrapper ];
-            postBuild = "wrapProgram $out/bin/pa6e-print --prefix PATH : $out/bin";
-          };
-
         in
         {
           packages = {
-            inherit pa6e pa6e-print;
-            default = pa6e-print;
+            inherit pa6e pa6e-wrapped pa6e-manpages;
+            default = pa6e-wrapped;
           };
 
           devShells.default = pkgs.mkShell (
