@@ -20,4 +20,6 @@ result
 
 # Temp
 tmp/
-commit.bash
+
+# Ad hoc test artifacts
+label-screenshot-test.png

@@ -49,8 +49,8 @@ The final image is written to _file_*-trimmed.png*.
 	*A6p* / *A6+* (576px width).
 
 *-c* _level_, *--concentration* _level_
-	Heat concentration level controlling print darkness. Values: *0*
-	(light), *1* (medium, default), or *2* (dark).
+	Heat concentration level: *0* (light), *1* (medium, default), or
+	*2* (dark).
 
 *-f* _amount_, *--feed* _amount_
 	Paper feed amount after printing, 0-255. Default: *120*.

@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/fea3b367d61c1a6592bc47c72f40a9f3e6a53e96";
-    nixpkgs-master.url = "github:NixOS/nixpkgs/c7673e9a9a58dde446a5fe1d089d6cc12aa41238";
     utils.url = "https://flakehub.com/f/numtide/flake-utils/0.1.102";
 
     chrest = {
@@ -17,7 +16,6 @@
     {
       self,
       nixpkgs,
-      nixpkgs-master,
       utils,
       chrest,
     }:

@@ -123,6 +123,7 @@ fn resolve_css(cli_override: Option<&PathBuf>) -> Result<PathBuf> {
         if path.exists() {
             return Ok(path);
         }
+        eprintln!("warning: built-in CSS path not found: {p}");
     }
     let local = PathBuf::from("peri-a6.css");
     if local.exists() {
@@ -137,10 +138,6 @@ fn resolve_css(cli_override: Option<&PathBuf>) -> Result<PathBuf> {
 fn cmd_print(args: PrintArgs) -> Result<()> {
     let (row_width, row_bytes) = resolve_model(&args.model)?;
     let css = resolve_css(args.css.as_ref())?;
-
-    if args.concentration > 2 {
-        bail!("concentration must be 0, 1, or 2");
-    }
 
     let tmp = tempfile::tempdir().context("failed to create temp directory")?;
 
@@ -160,7 +157,12 @@ fn cmd_print(args: PrintArgs) -> Result<()> {
 
     pipeline::trim_whitespace(&png, &trimmed_tmp)?;
 
-    let final_name = format!("{}-trimmed.png", args.file.display());
+    let stem = args
+        .file
+        .file_name()
+        .and_then(|n| n.to_str())
+        .context("invalid input filename")?;
+    let final_name = format!("{stem}-trimmed.png");
     let final_path = PathBuf::from(&final_name);
     std::fs::copy(&trimmed_tmp, &final_path)
         .with_context(|| format!("failed to copy output to {final_name}"))?;
@@ -168,7 +170,14 @@ fn cmd_print(args: PrintArgs) -> Result<()> {
     println!("{final_name}");
 
     if let Some(ref mac) = args.mac {
-        send_image(mac, &final_path, row_width, row_bytes, args.concentration, args.feed)?;
+        send_image(
+            mac,
+            &final_path,
+            row_width,
+            row_bytes,
+            args.concentration,
+            args.feed,
+        )?;
     }
 
     Ok(())

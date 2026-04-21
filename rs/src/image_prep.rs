@@ -1,4 +1,4 @@
-use anyhow::{Context, Result};
+use anyhow::{bail, Context, Result};
 use image::imageops::FilterType;
 use image::ImageReader;
 use image::GenericImageView;
@@ -36,5 +36,8 @@ pub fn prepare(path: &Path, row_width: u32) -> Result<(Vec<u8>, u16)> {
         }
     }
 
+    if new_height > u16::MAX as u32 {
+        bail!("resized image height {new_height} exceeds maximum {}", u16::MAX);
+    }
     Ok((packed, new_height as u16))
 }

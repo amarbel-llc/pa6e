@@ -1,6 +1,6 @@
 use anyhow::{bail, Context, Result};
 use std::path::Path;
-use std::process::{Command, Stdio};
+use std::process::Command;
 
 const PAPER_WIDTH_IN: f64 = 2.2409;
 
@@ -13,7 +13,6 @@ pub fn markdown_to_html(input: &Path, css: &Path, output: &Path) -> Result<()> {
         .arg("--css")
         .arg(css)
         .arg(input)
-        .stderr(Stdio::null())
         .status()
         .context("failed to run pandoc")?;
     if !status.success() {
@@ -28,14 +27,7 @@ pub fn html_to_pdf(input: &Path, output: &Path) -> Result<()> {
         .with_context(|| format!("cannot resolve {}", input.display()))?;
     let url = format!("file://{}", canonical.display());
     let status = Command::new("chrest")
-        .args([
-            "capture",
-            "--format",
-            "pdf",
-            "--url",
-            &url,
-            "--output",
-        ])
+        .args(["capture", "--format", "pdf", "--url", &url, "--output"])
         .arg(output)
         .args([
             "--no-headers",
