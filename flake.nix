@@ -2,7 +2,7 @@
   description = "Toolset for printing to Peripage A6 thermal printers via Bluetooth.";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/fea3b367d61c1a6592bc47c72f40a9f3e6a53e96";
+    nixpkgs.url = "github:amarbel-llc/nixpkgs";
     utils.url = "https://flakehub.com/f/numtide/flake-utils/0.1.102";
 
     chrest = {
