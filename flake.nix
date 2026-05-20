@@ -23,6 +23,7 @@
       nixpkgs,
       utils,
       chrest,
+      ...
     }:
     utils.lib.eachSystem
       [
