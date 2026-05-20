@@ -3,6 +3,11 @@
 
   inputs = {
     nixpkgs.url = "github:amarbel-llc/nixpkgs";
+    # nixpkgs-master is the SHA-pinned upstream anchor that eng's
+    # update-nix-repos recipe cascades. Without this input the cascade
+    # falls through to `nix flake update` on the floating `nixpkgs`
+    # ref and churns flake.lock every run.
+    nixpkgs-master.url = "github:NixOS/nixpkgs/d233902339c02a9c334e7e593de68855ad26c4cb";
     utils.url = "https://flakehub.com/f/numtide/flake-utils/0.1.102";
 
     chrest = {
