@@ -5,6 +5,7 @@
     nixpkgs = {
       url = "github:amarbel-llc/nixpkgs";
       inputs.nixpkgs-master.follows = "nixpkgs-master";
+      inputs.treefmt-nix.follows = "treefmt-nix";
     };
     # nixpkgs-master is the SHA-pinned upstream anchor that eng's
     # update-nix-repos recipe cascades. Without this input the cascade
@@ -12,6 +13,12 @@
     # ref and churns flake.lock every run.
     nixpkgs-master.url = "github:NixOS/nixpkgs/d233902339c02a9c334e7e593de68855ad26c4cb";
     utils.url = "https://flakehub.com/f/numtide/flake-utils/0.1.102";
+
+    # `nix fmt` driver. Config lives in ./treefmt.nix.
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     chrest = {
       url = "github:amarbel-llc/chrest";
@@ -26,6 +33,7 @@
       nixpkgs,
       utils,
       chrest,
+      treefmt-nix,
       ...
     }:
     utils.lib.eachSystem
@@ -43,6 +51,9 @@
 
           isLinux = pkgs.stdenv.hostPlatform.isLinux;
           isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+
+          # `nix fmt` entry point. Config lives in ./treefmt.nix.
+          treefmtEval = treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
 
           css = pkgs.runCommand "pa6e-css" { } ''
             mkdir -p $out/share/pa6e
@@ -103,6 +114,14 @@
             inherit pa6e pa6e-wrapped pa6e-manpages;
             default = pa6e-wrapped;
           };
+
+          formatter = treefmtEval.config.build.wrapper;
+
+          # Sandboxed treefmt check for `just lint-fmt` and `nix flake
+          # check`. Runs formatters over the source tree in a nix build
+          # and exits non-zero on drift — no working-tree side effects,
+          # unlike `nix fmt -- --ci`.
+          checks.treefmt = treefmtEval.config.build.check self;
 
           devShells.default = pkgs.mkShell (
             {

@@ -250,7 +250,9 @@
           "nixpkgs-master"
         ],
         "systems": "systems_3",
-        "treefmt-nix": "treefmt-nix_5"
+        "treefmt-nix": [
+          "treefmt-nix"
+        ]
       },
       "locked": {
         "lastModified": 1779730058,
@@ -319,6 +321,7 @@
         "chrest": "chrest",
         "nixpkgs": "nixpkgs",
         "nixpkgs-master": "nixpkgs-master_3",
+        "treefmt-nix": "treefmt-nix_5",
         "utils": "utils"
       }
     },
@@ -570,8 +573,7 @@
     "treefmt-nix_5": {
       "inputs": {
         "nixpkgs": [
-          "nixpkgs",
-          "nixpkgs-master"
+          "nixpkgs"
         ]
       },
       "locked": {
