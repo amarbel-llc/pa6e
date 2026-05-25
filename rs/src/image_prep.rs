@@ -1,7 +1,7 @@
-use anyhow::{bail, Context, Result};
-use image::imageops::FilterType;
+use anyhow::{Context, Result, bail};
 use image::GenericImageView;
 use image::ImageReader;
+use image::imageops::FilterType;
 use std::path::Path;
 
 /// Loads a PNG, resizes to printer width, converts to 1-bit monochrome.

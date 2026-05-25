@@ -1,6 +1,6 @@
 use anyhow::{Context, Result};
-use bluer::rfcomm::{Socket, SocketAddr};
 use bluer::Address;
+use bluer::rfcomm::{Socket, SocketAddr};
 use tokio::io::AsyncWriteExt;
 
 const RFCOMM_CHANNEL: u8 = 1;
@@ -30,12 +30,9 @@ pub fn connect(address: &BtAddress) -> Result<BluerStream> {
     rt.block_on(async {
         let socket = Socket::new()?;
         let addr = SocketAddr::new(*address, RFCOMM_CHANNEL);
-        let stream = socket
-            .connect(addr)
-            .await
-            .with_context(|| {
-                format!("failed to connect to {address} on channel {RFCOMM_CHANNEL}")
-            })?;
+        let stream = socket.connect(addr).await.with_context(|| {
+            format!("failed to connect to {address} on channel {RFCOMM_CHANNEL}")
+        })?;
         Ok(BluerStream { inner: stream })
     })
 }

@@ -1,8 +1,8 @@
-use anyhow::{bail, Context, Result};
-use core_foundation::runloop::{kCFRunLoopDefaultMode, CFRunLoopRunInMode};
+use anyhow::{Context, Result, bail};
+use core_foundation::runloop::{CFRunLoopRunInMode, kCFRunLoopDefaultMode};
 use objc2::rc::Retained;
 use objc2::runtime::AnyObject;
-use objc2::{define_class, msg_send, AllocAnyThread, DefinedClass};
+use objc2::{AllocAnyThread, DefinedClass, define_class, msg_send};
 use objc2_foundation::{NSObject, NSString};
 use objc2_io_bluetooth::{
     BluetoothRFCOMMChannelID, IOBluetoothDevice, IOBluetoothDeviceAsyncCallbacks,
@@ -84,24 +84,17 @@ define_class!(
             &self,
             _device: Option<&IOBluetoothDevice>,
             _status: i32,
-        ) {}
+        ) {
+        }
 
         #[unsafe(method(connectionComplete:status:))]
-        unsafe fn connection_complete(
-            &self,
-            _device: Option<&IOBluetoothDevice>,
-            status: i32,
-        ) {
+        unsafe fn connection_complete(&self, _device: Option<&IOBluetoothDevice>, status: i32) {
             self.ivars().conn_complete.set(true);
             self.ivars().conn_status.set(status);
         }
 
         #[unsafe(method(sdpQueryComplete:status:))]
-        unsafe fn sdp_query_complete(
-            &self,
-            _device: Option<&IOBluetoothDevice>,
-            status: i32,
-        ) {
+        unsafe fn sdp_query_complete(&self, _device: Option<&IOBluetoothDevice>, status: i32) {
             self.ivars().sdp_complete.set(true);
             self.ivars().sdp_status.set(status);
         }
@@ -200,7 +193,10 @@ pub fn connect(address: &BtAddress) -> Result<MacosRfcommStream> {
     let result = unsafe { device.performSDPQuery(Some(&*delegate as &AnyObject)) };
 
     if result != 0 {
-        bail!("SDP query to {} failed to start: IOReturn {result}", address);
+        bail!(
+            "SDP query to {} failed to start: IOReturn {result}",
+            address
+        );
     }
 
     let deadline = Instant::now() + CONNECT_TIMEOUT;
@@ -259,16 +255,14 @@ pub fn connect(address: &BtAddress) -> Result<MacosRfcommStream> {
         }
     }
 
-    let channel =
-        channel.context("openRFCOMMChannelAsync returned success but channel is None")?;
+    let channel = channel.context("openRFCOMMChannelAsync returned success but channel is None")?;
 
     Ok(MacosRfcommStream { channel, device })
 }
 
 /// Search the device's SDP service records for one with an RFCOMM channel.
 fn find_rfcomm_channel(device: &IOBluetoothDevice) -> Result<BluetoothRFCOMMChannelID> {
-    let services = unsafe { device.services() }
-        .context("no SDP services found on device")?;
+    let services = unsafe { device.services() }.context("no SDP services found on device")?;
 
     let count = services.count();
     for i in 0..count {

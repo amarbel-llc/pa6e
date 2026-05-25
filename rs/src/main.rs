@@ -3,7 +3,7 @@ mod image_prep;
 mod pipeline;
 mod printer;
 
-use anyhow::{bail, Context, Result};
+use anyhow::{Context, Result, bail};
 use clap::{Parser, Subcommand};
 use std::path::PathBuf;
 
