@@ -2,7 +2,10 @@
   description = "Toolset for printing to Peripage A6 thermal printers via Bluetooth.";
 
   inputs = {
-    nixpkgs.url = "github:amarbel-llc/nixpkgs";
+    nixpkgs = {
+      url = "github:amarbel-llc/nixpkgs";
+      inputs.nixpkgs-master.follows = "nixpkgs-master";
+    };
     # nixpkgs-master is the SHA-pinned upstream anchor that eng's
     # update-nix-repos recipe cascades. Without this input the cascade
     # falls through to `nix flake update` on the floating `nixpkgs`
