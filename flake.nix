@@ -20,10 +20,22 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Pinned past amarbel-llc/tap@e4f75a7c so chrest's transitive tap
+    # (still at 527bce2 in chrest's lock) collapses onto this fixed
+    # node and Determinate Nix 3.20 stops choking on bats.nix's POSIX
+    # bracket regex on darwin. Mirrors amarbel-llc/eng@0fe43804.
+    tap = {
+      url = "github:amarbel-llc/tap";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs-master.follows = "nixpkgs-master";
+      inputs.utils.follows = "utils";
+    };
+
     chrest = {
       url = "github:amarbel-llc/chrest";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.utils.follows = "utils";
+      inputs.tap.follows = "tap";
     };
   };
 
