@@ -31,7 +31,7 @@ shell; the Rust package is built with `crane`.
 direnv allow   # enter dev environment
 just build     # nix build (wrapped binary via crane)
 just test      # run tests through nix
-just default   # lint + build + test
+just default   # validate + lint + build + test
 ```
 
 ## License

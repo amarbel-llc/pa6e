@@ -143,7 +143,12 @@
 
           pa6e-wrapped = pkgs.symlinkJoin {
             name = "pa6e";
-            paths = [ pa6e ];
+            # Ship the man page alongside the binary so `nix build`
+            # produces share/man/man1/pa6e.1 (eng-manpages(7)).
+            paths = [
+              pa6e
+              pa6e-manpages
+            ];
             buildInputs = [ pkgs.makeWrapper ];
             postBuild = ''
               wrapProgram $out/bin/pa6e --prefix PATH : ${
@@ -185,8 +190,9 @@
             # Sandboxed treefmt check for `just lint-fmt` and `nix flake
             # check`. Runs formatters over the source tree in a nix build
             # and exits non-zero on drift — no working-tree side effects,
-            # unlike `nix fmt -- --ci`.
-            treefmt = treefmtEval.config.build.check self;
+            # unlike `nix fmt -- --ci`. Named `formatting` per
+            # eng-design_patterns-justfile(7) § LINT-FMT.
+            formatting = treefmtEval.config.build.check self;
 
             # `cargo test` through nix (`just test`). Reuses the cached
             # cargoArtifacts so it only compiles pa6e's own crate. No
@@ -197,9 +203,10 @@
 
           # Run/iterate shell: cargo/rustc/pkg-config are intentionally
           # absent — all builds go through `nix build`. This carries the
-          # pipeline runtime tools (for `just render` and manual print
-          # testing) plus, on Linux, what's needed to RUN the wrapped
-          # binary against a real printer.
+          # pipeline runtime tools (for `just debug-render` and manual
+          # print testing), `gh` (for the `just release` recipe's
+          # `gh release create`), plus, on Linux, what's needed to RUN the
+          # wrapped binary against a real printer.
           devShells.default = pkgs.mkShell (
             {
               packages =
@@ -207,6 +214,7 @@
                   imagemagick
                   ghostscript_headless
                   pandoc
+                  gh
                 ])
                 ++ [
                   chrest.packages.${system}.default

@@ -54,8 +54,10 @@ direnv allow                      # enter dev environment
 # Build & test (both go through nix; just wraps the flake lanes)
 just build                        # nix build (wrapped binary via crane)
 just test                         # nix build .#checks.<system>.tests
-just lint                         # nix build .#checks.<system>.treefmt
-just default                      # lint build test (== the merge pre-merge hook)
+just lint                         # nix build .#checks.<system>.formatting
+just validate                     # devShell + manpage (scdoc) build checks
+just default                      # validate lint build test (== the pre-merge hook)
+just codemod-fmt-treefmt          # rewrite formatting in place (nix fmt)
 
 # Run
 nix run . -- print label.md                        # generate image only
@@ -69,13 +71,14 @@ nix run . -- version                               # version + pinned component 
 `version.env` (`export PA6E_VERSION=...`) at repo root is the single source of
 truth. `flake.nix` reads it via `builtins.readFile`; `rs/build.rs` injects it
 (plus the commit and pinned-component versions) into the binary, surfaced by the
-`pa6e version` subcommand. `rs/Cargo.toml`'s `version` field is decoupled and not
-authoritative. Release recipes live in the `maint` group:
+`pa6e version` subcommand. `rs/Cargo.toml`'s `version` is inert at runtime but is
+kept in lockstep by `bump-version` (the two never diverge). Release recipes live
+in the `maintenance` group:
 
 ``` bash
-just bump-version 0.1.1            # rewrite PA6E_VERSION in version.env
-just tag 0.1.1 "feat: ..."         # sign + push v0.1.1 (v prefix, repo-root pkg)
-just release 0.1.1                 # master-only: bump, commit, push, signed tag
+just bump-version 0.1.1            # rewrite version.env + rs/Cargo.toml
+just tag "feat: ..."               # sign + push v<version> (version read from version.env)
+just release 0.1.1                 # master-only: bump, commit, push, tag, gh release create
 ```
 
 ## Justfile Commands

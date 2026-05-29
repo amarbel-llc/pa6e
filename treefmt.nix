@@ -1,4 +1,4 @@
-# treefmt-nix configuration. Run via `nix fmt` or `just fmt`.
+# treefmt-nix configuration. Run via `nix fmt` or `just codemod-fmt-treefmt`.
 { lib, ... }:
 {
   projectRootFile = "flake.nix";
@@ -27,6 +27,7 @@
   settings.global.excludes = [
     "flake.lock"
     "Cargo.lock"
+    "version.env"
     "LICENSE"
     "sweatfile"
     "*.md"
