@@ -177,6 +177,21 @@
     },
     "crane_2": {
       "locked": {
+        "lastModified": 1780029330,
+        "narHash": "sha256-fWFKEKB5CP+NO8/3uOaEZIVbd03mvDJ//VsnKkXty08=",
+        "owner": "ipetkov",
+        "repo": "crane",
+        "rev": "6823b493a0bc2142082075576efa6633b537197e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ipetkov",
+        "repo": "crane",
+        "type": "github"
+      }
+    },
+    "crane_3": {
+      "locked": {
         "lastModified": 1779130139,
         "narHash": "sha256-BLrtr42azquO7MdGFU5a7KiMl3YpFlTeIXqy1fT5GlQ=",
         "owner": "ipetkov",
@@ -466,6 +481,7 @@
     "root": {
       "inputs": {
         "chrest": "chrest",
+        "crane": "crane_2",
         "nixpkgs": "nixpkgs",
         "nixpkgs-master": "nixpkgs-master_2",
         "tap": "tap",
@@ -579,7 +595,7 @@
     "tap": {
       "inputs": {
         "bats": "bats_2",
-        "crane": "crane_2",
+        "crane": "crane_3",
         "gomod2nix": "gomod2nix_2",
         "nixpkgs": [
           "nixpkgs"

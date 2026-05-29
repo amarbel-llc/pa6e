@@ -39,21 +39,43 @@ nix) > `./peri-a6.css` in the working directory.
 ## Build & Run
 
 Supports `x86_64-linux`, `aarch64-linux`, and `aarch64-darwin`. Uses nix flakes +
-direnv. The dev shell provides: `bluez` (Linux), `imagemagick`, `pandoc`,
-`chrest`, `cargo`, `rustc`, `pkg-config`, `dbus` (Linux).
+direnv.
+
+**All builds go through nix.** `cargo`/`rustc`/`pkg-config` are intentionally
+absent from the dev shell — the Rust package is built with `crane`, which caches
+dependency compilation in a `Cargo.lock`-keyed `cargoArtifacts` derivation so a
+plain `nix build` only recompiles pa6e's own crate. The dev shell carries the
+pipeline runtime tools (`imagemagick`, `ghostscript`, `pandoc`, `chrest`) plus,
+on Linux, `bluez`/`dbus` to run the wrapped binary against a printer.
 
 ``` bash
 direnv allow                      # enter dev environment
 
-# Build
-cd rs && cargo build              # build pa6e binary
-cd rs && cargo test               # run tests
-nix build                         # build wrapped binary via nix
+# Build & test (both go through nix; just wraps the flake lanes)
+just build                        # nix build (wrapped binary via crane)
+just test                         # nix build .#checks.<system>.tests
+just lint                         # nix build .#checks.<system>.treefmt
+just default                      # lint build test (== the merge pre-merge hook)
 
 # Run
 nix run . -- print label.md                        # generate image only
 nix run . -- print label.md -m AA:BB:CC:DD:EE:FF   # generate + print
 nix run . -- send -m AA:BB:CC:DD:EE:FF -i img.png  # send pre-rendered image
+nix run . -- version                               # version + pinned component table
+```
+
+## Versioning & Release
+
+`version.env` (`export PA6E_VERSION=...`) at repo root is the single source of
+truth. `flake.nix` reads it via `builtins.readFile`; `rs/build.rs` injects it
+(plus the commit and pinned-component versions) into the binary, surfaced by the
+`pa6e version` subcommand. `rs/Cargo.toml`'s `version` field is decoupled and not
+authoritative. Release recipes live in the `maint` group:
+
+``` bash
+just bump-version 0.1.1            # rewrite PA6E_VERSION in version.env
+just tag 0.1.1 "feat: ..."         # sign + push v0.1.1 (v prefix, repo-root pkg)
+just release 0.1.1                 # master-only: bump, commit, push, signed tag
 ```
 
 ## Justfile Commands

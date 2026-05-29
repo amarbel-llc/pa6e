@@ -31,6 +31,9 @@ jobs:
           determinate: true
       - uses: DeterminateSystems/flakehub-cache-action@main
       - run: nix build
+      # Runs checks.treefmt (formatting) + checks.tests (crane cargoTest)
+      # for the current system — mirrors `just default`'s nix lanes.
+      - run: nix flake check --show-trace
 
   flakehub-publish:
     if: github.ref == 'refs/heads/master'

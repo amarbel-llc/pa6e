@@ -8,25 +8,30 @@ printer over Bluetooth RFCOMM.
 ## Usage
 
 ``` bash
-# Build image from markdown (stage 1)
-nix run . label.md
+# Render markdown to a printer image
+nix run . -- print label.md
 
-# Build + print (stages 1+2)
-./print_label.bash
+# Render + print
+nix run . -- print label.md -m MAC_ADDRESS
 
-# Rust CLI directly
-pa6e -p A6p -m MAC_ADDRESS -i image.png -c 2
+# Send a pre-rendered image
+nix run . -- send -m MAC_ADDRESS -i image.png -p A6p -c 2
+
+# Version + pinned component table
+nix run . -- version
 ```
 
 ## Build
 
-Linux only (`x86_64-linux`, `aarch64-linux`). Uses nix flakes + direnv.
+Supports `x86_64-linux`, `aarch64-linux`, and `aarch64-darwin`. Uses nix flakes
++ direnv. **All builds go through nix** — `cargo` is intentionally not in the dev
+shell; the Rust package is built with `crane`.
 
 ``` bash
-direnv allow          # enter dev environment
-cd rs && cargo build  # build Rust CLI
-cd rs && cargo test   # run tests
-nix build .#pa6e      # build via nix
+direnv allow   # enter dev environment
+just build     # nix build (wrapped binary via crane)
+just test      # run tests through nix
+just default   # lint + build + test
 ```
 
 ## License

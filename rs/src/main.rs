@@ -20,6 +20,8 @@ enum Cmd {
     Send(SendArgs),
     /// Convert markdown to a printer image and optionally print
     Print(PrintArgs),
+    /// Print version and the pinned downstream component table
+    Version,
 }
 
 #[derive(clap::Args)]
@@ -195,10 +197,38 @@ fn cmd_send(args: SendArgs) -> Result<()> {
     )
 }
 
+/// Hybrid version output (eng-versioning(7) orchestrator form): a
+/// self-identification line, a blank line, then a table of the tools
+/// pinned in the nix wrapper. Values are injected at build time by the
+/// nix derivation via build.rs; `option_env!` falls back to "unknown"
+/// for builds that did not set them.
+fn print_version() {
+    let version = option_env!("PA6E_VERSION").unwrap_or("unknown");
+    let commit = option_env!("PA6E_COMMIT").unwrap_or("unknown");
+    println!("pa6e {version}+{commit}");
+    println!();
+    println!("{:<13} {:<12} {}", "COMPONENT", "VERSION", "REV");
+    let row = |component: &str, ver: Option<&str>, rev: &str| {
+        println!("{:<13} {:<12} {}", component, ver.unwrap_or("unknown"), rev);
+    };
+    row(
+        "chrest",
+        option_env!("PA6E_CHREST_VERSION"),
+        option_env!("PA6E_CHREST_REV").unwrap_or("unknown"),
+    );
+    row("pandoc", option_env!("PA6E_PANDOC_VERSION"), "-");
+    row("imagemagick", option_env!("PA6E_IMAGEMAGICK_VERSION"), "-");
+    row("ghostscript", option_env!("PA6E_GHOSTSCRIPT_VERSION"), "-");
+}
+
 fn main() -> Result<()> {
     let cli = Cli::parse();
     match cli.command {
         Cmd::Send(args) => cmd_send(args),
         Cmd::Print(args) => cmd_print(args),
+        Cmd::Version => {
+            print_version();
+            Ok(())
+        }
     }
 }
