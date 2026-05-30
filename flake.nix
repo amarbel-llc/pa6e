@@ -2,7 +2,7 @@
   description = "Toolset for printing to Peripage A6 thermal printers via Bluetooth.";
 
   inputs = {
-    nixpkgs = {
+    igloo = {
       url = "github:amarbel-llc/igloo";
       inputs.nixpkgs-master.follows = "nixpkgs-master";
       inputs.treefmt-nix.follows = "treefmt-nix";
@@ -17,7 +17,7 @@
     # `nix fmt` driver. Config lives in ./treefmt.nix.
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "igloo";
     };
 
     # Pinned past amarbel-llc/tap@e4f75a7c so chrest's transitive tap
@@ -26,14 +26,14 @@
     # bracket regex on darwin. Mirrors amarbel-llc/eng@0fe43804.
     tap = {
       url = "github:amarbel-llc/tap";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.igloo.follows = "igloo";
       inputs.nixpkgs-master.follows = "nixpkgs-master";
       inputs.utils.follows = "utils";
     };
 
     chrest = {
       url = "github:amarbel-llc/chrest";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.igloo.follows = "igloo";
       inputs.utils.follows = "utils";
       inputs.tap.follows = "tap";
     };
@@ -50,7 +50,7 @@
   outputs =
     {
       self,
-      nixpkgs,
+      igloo,
       utils,
       chrest,
       treefmt-nix,
@@ -81,7 +81,7 @@
       (
         system:
         let
-          pkgs = import nixpkgs {
+          pkgs = import igloo {
             inherit system;
           };
 
