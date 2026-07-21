@@ -2,6 +2,7 @@
   "nodes": {
     "bats": {
       "inputs": {
+        "conformist": "conformist",
         "igloo": [
           "chrest",
           "igloo"
@@ -10,60 +11,20 @@
           "chrest",
           "nixpkgs-master"
         ],
-        "treefmt-nix": [
-          "chrest",
-          "treefmt-nix"
-        ],
         "utils": [
           "chrest",
           "utils"
         ]
       },
       "locked": {
-        "lastModified": 1783088926,
-        "narHash": "sha256-Yir6gJaGapzNSehKUfaOyBxzXKeUJUUwWhGfAtL/COQ=",
-        "owner": "amarbel-llc",
-        "repo": "bats",
-        "rev": "70141ac1ce1f2c96a9872e79eb47c760e5427df0",
-        "type": "github"
+        "lastModified": 1784579237,
+        "narHash": "sha256-Chjt8vpfWwD9oAKUCiuwZ+2LaSEZ6j365P+w9ehs8uA=",
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/bats/archive/96fb545544d0e2dec1faf12a7ba0c396be1cc149.tar.gz"
       },
       "original": {
-        "owner": "amarbel-llc",
-        "repo": "bats",
-        "type": "github"
-      }
-    },
-    "bats_2": {
-      "inputs": {
-        "igloo": [
-          "tap",
-          "igloo"
-        ],
-        "nixpkgs-master": [
-          "tap",
-          "nixpkgs-master"
-        ],
-        "treefmt-nix": [
-          "tap",
-          "treefmt-nix"
-        ],
-        "utils": [
-          "tap",
-          "utils"
-        ]
-      },
-      "locked": {
-        "lastModified": 1783342831,
-        "narHash": "sha256-yLDuY0Zf6DIT1vlzlLFhoyvsDNcL2OOPPcRCym8BYJE=",
-        "owner": "amarbel-llc",
-        "repo": "bats",
-        "rev": "7f64db7d8905d0cef6410ec6689e3fbcb02f1fd5",
-        "type": "github"
-      },
-      "original": {
-        "owner": "amarbel-llc",
-        "repo": "bats",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/bats/archive/master.tar.gz"
       }
     },
     "bun2nix": {
@@ -77,41 +38,12 @@
           "chrest",
           "igloo"
         ],
-        "systems": "systems",
-        "treefmt-nix": [
-          "chrest",
-          "treefmt-nix"
-        ]
-      },
-      "locked": {
-        "lastModified": 1782772816,
-        "narHash": "sha256-s9BuFv0mRuZx9C1MF8qPHRdcAK14ONi0A5m6E2wqOoM=",
-        "owner": "nix-community",
-        "repo": "bun2nix",
-        "rev": "5a39d717029e94163ac223aee8d5c9946cafed1c",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "bun2nix",
-        "type": "github"
-      }
-    },
-    "bun2nix_2": {
-      "inputs": {
-        "flake-parts": [
-          "igloo",
-          "flake-parts"
-        ],
-        "nixpkgs": [
-          "igloo",
-          "nixpkgs-master"
-        ],
         "systems": [
           "igloo",
           "systems"
         ],
         "treefmt-nix": [
+          "chrest",
           "igloo",
           "treefmt-nix"
         ]
@@ -134,65 +66,66 @@
       "inputs": {
         "bats": "bats",
         "bun2nix": "bun2nix",
+        "conformist": [
+          "chrest",
+          "doppelgang",
+          "conformist"
+        ],
+        "cutting-garden": "cutting-garden",
         "doppelgang": "doppelgang",
         "igloo": [
           "igloo"
         ],
-        "nixpkgs-master": "nixpkgs-master",
+        "nixpkgs-master": [
+          "nixpkgs-master"
+        ],
         "purse-first": "purse-first",
         "tap": [
           "tap"
         ],
         "tommy": "tommy",
-        "treefmt-nix": "treefmt-nix",
         "utils": [
           "utils"
         ]
       },
       "locked": {
-        "lastModified": 1783184609,
-        "narHash": "sha256-OtSC3NCBtbxRsAnbQi9j3TC+1XvRw6FkHbsl9FGA7oQ=",
-        "owner": "amarbel-llc",
-        "repo": "chrest",
-        "rev": "f2c2e90034d44465e1804105a5905ec26d1561a2",
-        "type": "github"
+        "lastModified": 1784649102,
+        "narHash": "sha256-siXmXEVtOiDj/joHm39ljt97LRj+InZ9axkW8GjtQkA=",
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/chrest/archive/8430b1769d667d659942e37a31eafbb6fd519c69.tar.gz"
       },
       "original": {
-        "owner": "amarbel-llc",
-        "repo": "chrest",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/chrest/archive/master.tar.gz"
       }
     },
     "conformist": {
       "inputs": {
         "igloo": [
           "chrest",
-          "purse-first",
+          "bats",
           "igloo"
         ],
         "nixpkgs-master": [
           "chrest",
-          "purse-first",
+          "bats",
           "nixpkgs-master"
         ],
         "utils": [
           "chrest",
-          "purse-first",
+          "bats",
           "utils"
         ]
       },
       "locked": {
-        "lastModified": 1783088709,
-        "narHash": "sha256-7AM794S06PSDajYUXKxbql8o61ZfNDLyfN5h6aUB3+c=",
-        "owner": "amarbel-llc",
-        "repo": "conformist",
-        "rev": "14ce434d52a1a8fd28f7d6912fff9d53a598cb7b",
-        "type": "github"
+        "lastModified": 1784310418,
+        "narHash": "sha256-XqxuDSgy6rZSvQOprEQeLGqzI/d/2evH1cf9Wc+D5i8=",
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/conformist/archive/9abf54eeb6df0d544de7602e6007391d3c28f0dc.tar.gz"
       },
       "original": {
-        "owner": "amarbel-llc",
-        "repo": "conformist",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/conformist/archive/master.tar.gz"
       }
     },
     "conformist_2": {
@@ -214,26 +147,23 @@
         ]
       },
       "locked": {
-        "lastModified": 1783437992,
-        "narHash": "sha256-ZxAbtQ+x3/6W9sIlP4eepVZ0Gkncdm71ODMx2RTi7Hk=",
-        "owner": "amarbel-llc",
-        "repo": "conformist",
-        "rev": "726b745ddb5280f33eac7a5df84efe0491b0899f",
-        "type": "github"
+        "lastModified": 1784649683,
+        "narHash": "sha256-q3/pXh1iyYqb3TCkZfMLYgY3bFMLP+X0h6CrraWdZCA=",
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/conformist/archive/e04044f7f9df19e9df18156f800165bc9e28881a.tar.gz"
       },
       "original": {
-        "owner": "amarbel-llc",
-        "repo": "conformist",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/conformist/archive/master.tar.gz"
       }
     },
     "crane": {
       "locked": {
-        "lastModified": 1783203018,
-        "narHash": "sha256-G6R9IT/xwFuu+CYBWDUAok6AdC4ERC4ZfPPFtEpxnZE=",
+        "lastModified": 1784564969,
+        "narHash": "sha256-TkTWNhJV/8Wk3czlbz4bwHZkFCaCHPsOy+oJe4PUiXg=",
         "owner": "ipetkov",
         "repo": "crane",
-        "rev": "80db5bdc391be8a1794f6d8a2d56e3a84ebcede2",
+        "rev": "7930f6c291de6f83c257839d434592aa085f290a",
         "type": "github"
       },
       "original": {
@@ -242,23 +172,104 @@
         "type": "github"
       }
     },
-    "crane_2": {
+    "crap": {
+      "inputs": {
+        "bats": [
+          "chrest",
+          "cutting-garden",
+          "bats"
+        ],
+        "conformist": [
+          "chrest",
+          "cutting-garden",
+          "conformist"
+        ],
+        "igloo": [
+          "chrest",
+          "cutting-garden",
+          "igloo"
+        ],
+        "nixpkgs-master": [
+          "chrest",
+          "cutting-garden",
+          "nixpkgs-master"
+        ],
+        "utils": [
+          "chrest",
+          "cutting-garden",
+          "flake-utils"
+        ]
+      },
       "locked": {
-        "lastModified": 1783203018,
-        "narHash": "sha256-G6R9IT/xwFuu+CYBWDUAok6AdC4ERC4ZfPPFtEpxnZE=",
-        "owner": "ipetkov",
-        "repo": "crane",
-        "rev": "80db5bdc391be8a1794f6d8a2d56e3a84ebcede2",
-        "type": "github"
+        "lastModified": 1784571282,
+        "narHash": "sha256-5D+IYJGbDB+E5qMTdTo3mo+N/ZcumtrtoqicPUkzXhk=",
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/crap/archive/cf7e556275f3102ed0fb9757641539dbc485ed78.tar.gz"
       },
       "original": {
-        "owner": "ipetkov",
-        "repo": "crane",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/crap/archive/master.tar.gz"
+      }
+    },
+    "cutting-garden": {
+      "inputs": {
+        "bats": [
+          "chrest",
+          "bats"
+        ],
+        "conformist": [
+          "chrest",
+          "purse-first",
+          "conformist"
+        ],
+        "crap": "crap",
+        "flake-utils": [
+          "chrest",
+          "utils"
+        ],
+        "hyphence": "hyphence",
+        "igloo": [
+          "chrest",
+          "igloo"
+        ],
+        "langlang": "langlang",
+        "madder": "madder",
+        "nixpkgs-master": [
+          "chrest",
+          "nixpkgs-master"
+        ],
+        "piggy": "piggy",
+        "purse-first": [
+          "chrest",
+          "purse-first"
+        ],
+        "tap": [
+          "chrest",
+          "tap"
+        ],
+        "tommy": [
+          "chrest",
+          "tommy"
+        ]
+      },
+      "locked": {
+        "lastModified": 1784642605,
+        "narHash": "sha256-x7BXwyB01CmwFCQMUEqf+9rvH9THc65DZevMYmNS52M=",
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/cutting-garden/archive/13ba0c78cf960a68c6b261ce1f0115b534e235b0.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/cutting-garden/archive/master.tar.gz"
       }
     },
     "doppelgang": {
       "inputs": {
+        "conformist": [
+          "chrest",
+          "bats",
+          "conformist"
+        ],
         "igloo": [
           "chrest",
           "igloo"
@@ -267,27 +278,20 @@
           "chrest",
           "nixpkgs-master"
         ],
-        "treefmt-nix": [
-          "chrest",
-          "treefmt-nix"
-        ],
         "utils": [
           "chrest",
           "utils"
         ]
       },
       "locked": {
-        "lastModified": 1783173935,
-        "narHash": "sha256-+LCy+e+CrLOMgGu+tOC7G21jsZcxWKEsfEkqgB6LuKo=",
-        "owner": "amarbel-llc",
-        "repo": "doppelgang",
-        "rev": "e07fe4fa76d29c29d4d5d2c3d6fcce3e30339378",
-        "type": "github"
+        "lastModified": 1784643459,
+        "narHash": "sha256-ndTvk8I8ew1/p1Kc4psXd2MjXEKRQ5EhOh6w26kUQHg=",
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/doppelgang/archive/03830a22ccc48b54a880d050450c16b0920db137.tar.gz"
       },
       "original": {
-        "owner": "amarbel-llc",
-        "repo": "doppelgang",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/doppelgang/archive/master.tar.gz"
       }
     },
     "flake-parts": {
@@ -327,15 +331,12 @@
       "locked": {
         "lastModified": 1782656014,
         "narHash": "sha256-/JTvDNbl9p6rK7XfFib9cbYJB6a3Td0nLW33tGOZMmI=",
-        "owner": "amarbel-llc",
-        "repo": "gomod2nix",
-        "rev": "f2530333078779ff6565f2312ad891e82b233076",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/gomod2nix/archive/f2530333078779ff6565f2312ad891e82b233076.tar.gz"
       },
       "original": {
-        "owner": "amarbel-llc",
-        "repo": "gomod2nix",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/gomod2nix/archive/master.tar.gz"
       }
     },
     "gomod2nix_2": {
@@ -350,43 +351,225 @@
         ]
       },
       "locked": {
-        "lastModified": 1782656014,
-        "narHash": "sha256-/JTvDNbl9p6rK7XfFib9cbYJB6a3Td0nLW33tGOZMmI=",
-        "owner": "amarbel-llc",
-        "repo": "gomod2nix",
-        "rev": "f2530333078779ff6565f2312ad891e82b233076",
-        "type": "github"
+        "lastModified": 1784579654,
+        "narHash": "sha256-vaw+hPvOopq4vquCEjMprARNruHUg1r4SpAa3TPmCbg=",
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/gomod2nix/archive/9d7c339010c6e915463a50fd938686d278f79f15.tar.gz"
       },
       "original": {
-        "owner": "amarbel-llc",
-        "repo": "gomod2nix",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/gomod2nix/archive/master.tar.gz"
+      }
+    },
+    "hyphence": {
+      "inputs": {
+        "bats": [
+          "chrest",
+          "cutting-garden",
+          "bats"
+        ],
+        "conformist": [
+          "chrest",
+          "cutting-garden",
+          "conformist"
+        ],
+        "doppelgang": [
+          "chrest",
+          "doppelgang"
+        ],
+        "igloo": [
+          "chrest",
+          "cutting-garden",
+          "igloo"
+        ],
+        "langlang": [
+          "chrest",
+          "cutting-garden",
+          "langlang"
+        ],
+        "nixpkgs-master": [
+          "chrest",
+          "cutting-garden",
+          "nixpkgs-master"
+        ],
+        "purse-first": [
+          "chrest",
+          "cutting-garden",
+          "purse-first"
+        ],
+        "utils": [
+          "chrest",
+          "cutting-garden",
+          "flake-utils"
+        ]
+      },
+      "locked": {
+        "lastModified": 1784562440,
+        "narHash": "sha256-6UzomQiJL+HZ8w0wrq4N5usxVa+h1Jv/VSZil3JYVts=",
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/hyphence/archive/ea7f1e0933f9fecfb85e09a7dd5d481fa31c1592.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/hyphence/archive/master.tar.gz"
       }
     },
     "igloo": {
       "inputs": {
-        "bun2nix": "bun2nix_2",
+        "bun2nix": [
+          "chrest",
+          "bun2nix"
+        ],
         "flake-parts": "flake-parts",
         "nixpkgs-master": [
           "nixpkgs-master"
         ],
-        "systems": "systems_2",
+        "systems": "systems",
         "treefmt-nix": [
           "treefmt-nix"
         ]
       },
       "locked": {
-        "lastModified": 1783336640,
-        "narHash": "sha256-DsK5yYg7r7ULCY5QcbaOtLEkZlgO9Ozt54ffeIYr+CM=",
-        "owner": "amarbel-llc",
-        "repo": "igloo",
-        "rev": "d1c081d49ca722064e090131e1cf927215b1b227",
+        "lastModified": 1784650356,
+        "narHash": "sha256-1t7KRC4W/Z6XW92QMbfi9CBPatFAAADKLJbAePiE+AA=",
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/igloo/archive/b33e4110475773b342a44570b8912c7c684d065e.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/igloo/archive/master.tar.gz"
+      }
+    },
+    "jcardsim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1589327878,
+        "narHash": "sha256-0akp8BAp6QxGuBrDFEg0ED/F98bCkO2WQSocYqWszyI=",
+        "owner": "arekinath",
+        "repo": "jcardsim",
+        "rev": "4c766cfb48c43507f9a30a1443e7214d2073a430",
         "type": "github"
       },
       "original": {
-        "owner": "amarbel-llc",
-        "repo": "igloo",
+        "owner": "arekinath",
+        "repo": "jcardsim",
         "type": "github"
+      }
+    },
+    "langlang": {
+      "inputs": {
+        "bats": [
+          "chrest",
+          "cutting-garden",
+          "bats"
+        ],
+        "igloo": [
+          "chrest",
+          "cutting-garden",
+          "igloo"
+        ],
+        "nixpkgs-master": [
+          "chrest",
+          "cutting-garden",
+          "nixpkgs-master"
+        ],
+        "tap": [
+          "chrest",
+          "cutting-garden",
+          "tap"
+        ],
+        "utils": [
+          "chrest",
+          "cutting-garden",
+          "flake-utils"
+        ]
+      },
+      "locked": {
+        "lastModified": 1783344978,
+        "narHash": "sha256-6oSyTN563abHKnvaNmuhpodX6Xb0IGUfKWLWiyC5bXM=",
+        "ref": "refs/heads/master",
+        "rev": "5fbd00358572d7f0f34e20f00a05ee79e64ee04d",
+        "revCount": 1089,
+        "type": "git",
+        "url": "ssh://git@github.com/amarbel-llc/langlang"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/amarbel-llc/langlang"
+      }
+    },
+    "madder": {
+      "inputs": {
+        "bats": [
+          "chrest",
+          "cutting-garden",
+          "bats"
+        ],
+        "conformist": [
+          "chrest",
+          "cutting-garden",
+          "conformist"
+        ],
+        "crap": [
+          "chrest",
+          "cutting-garden",
+          "crap"
+        ],
+        "doppelgang": [
+          "chrest",
+          "cutting-garden",
+          "hyphence",
+          "doppelgang"
+        ],
+        "hyphence": [
+          "chrest",
+          "cutting-garden",
+          "hyphence"
+        ],
+        "igloo": [
+          "chrest",
+          "cutting-garden",
+          "igloo"
+        ],
+        "nixpkgs-master": [
+          "chrest",
+          "cutting-garden",
+          "nixpkgs-master"
+        ],
+        "piggy": [
+          "chrest",
+          "cutting-garden",
+          "piggy"
+        ],
+        "purse-first": [
+          "chrest",
+          "cutting-garden",
+          "purse-first"
+        ],
+        "tap": [
+          "chrest",
+          "cutting-garden",
+          "tap"
+        ],
+        "tommy": [
+          "chrest",
+          "tommy"
+        ],
+        "utils": [
+          "chrest",
+          "cutting-garden",
+          "flake-utils"
+        ]
+      },
+      "locked": {
+        "lastModified": 1784573144,
+        "narHash": "sha256-talKZjjtuFegRIPdyub+Mk37yrQaCjJFMjLT6g6eLTQ=",
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/madder/archive/d463a948790df192aac64a8573e023d675d67544.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/madder/archive/master.tar.gz"
       }
     },
     "nixpkgs-master": {
@@ -405,25 +588,98 @@
         "type": "github"
       }
     },
-    "nixpkgs-master_2": {
+    "oracle-javacard-sdks": {
+      "flake": false,
       "locked": {
-        "lastModified": 1781577229,
-        "narHash": "sha256-lrp67w8AulE9Ks53n27I45ADSzbOCn4H+CNW1Ck8B+8=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "567a49d1913ce81ac6e9582e3553dd90a955875f",
+        "lastModified": 1778827321,
+        "narHash": "sha256-HL4EdW+aX/Ff2uqibxnOYTthVVglD6bf58CNvNEOGEA=",
+        "owner": "martinpaljak",
+        "repo": "oracle_javacard_sdks",
+        "rev": "6a75ec0d6913db236d354f154df7dbc9573d976d",
         "type": "github"
       },
       "original": {
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "567a49d1913ce81ac6e9582e3553dd90a955875f",
+        "owner": "martinpaljak",
+        "repo": "oracle_javacard_sdks",
+        "type": "github"
+      }
+    },
+    "piggy": {
+      "inputs": {
+        "bats": [
+          "chrest",
+          "cutting-garden",
+          "bats"
+        ],
+        "conformist": [
+          "chrest",
+          "cutting-garden",
+          "conformist"
+        ],
+        "igloo": [
+          "chrest",
+          "cutting-garden",
+          "igloo"
+        ],
+        "jcardsim": "jcardsim",
+        "langlang": [
+          "chrest",
+          "cutting-garden",
+          "hyphence",
+          "langlang"
+        ],
+        "nixpkgs-master": [
+          "chrest",
+          "cutting-garden",
+          "nixpkgs-master"
+        ],
+        "oracle-javacard-sdks": "oracle-javacard-sdks",
+        "pivapplet": "pivapplet",
+        "purse-first": [
+          "chrest",
+          "cutting-garden",
+          "purse-first"
+        ],
+        "utils": [
+          "chrest",
+          "cutting-garden",
+          "flake-utils"
+        ]
+      },
+      "locked": {
+        "lastModified": 1784562729,
+        "narHash": "sha256-mIJy9sbZPwgklymuvqNdZA3dTRcyUHObrmd8e0kQoUU=",
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/piggy/archive/77cfdea0031e2115ea6f475d84a010fc2a60998b.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/piggy/archive/master.tar.gz"
+      }
+    },
+    "pivapplet": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1661144882,
+        "narHash": "sha256-FuO9iocgB1ZjQCKW9EfPUuCIx066LIz0mhb73SmGMAw=",
+        "owner": "arekinath",
+        "repo": "PivApplet",
+        "rev": "5cb14a9e8d16e92fbad73dcad86a219a9210554f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "arekinath",
+        "repo": "PivApplet",
         "type": "github"
       }
     },
     "purse-first": {
       "inputs": {
-        "conformist": "conformist",
+        "conformist": [
+          "chrest",
+          "doppelgang",
+          "conformist"
+        ],
         "gomod2nix": "gomod2nix",
         "igloo": [
           "chrest",
@@ -439,17 +695,14 @@
         ]
       },
       "locked": {
-        "lastModified": 1783164399,
-        "narHash": "sha256-3zz48PB9il2sy1vlHAinykvPSKF9CAT+Qp/VMoglOjc=",
-        "owner": "amarbel-llc",
-        "repo": "purse-first",
-        "rev": "400e71c34a4b903365cbc4c273947cc01146e535",
-        "type": "github"
+        "lastModified": 1784580552,
+        "narHash": "sha256-ppG8E8C3ZEQ6bnTxofjNfpbQjJK1WmHmm8+T4Ubk+z8=",
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/purse-first/archive/679aa4bad05b7f4c2c72abc4a10b572083a825a4.tar.gz"
       },
       "original": {
-        "owner": "amarbel-llc",
-        "repo": "purse-first",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/purse-first/archive/master.tar.gz"
       }
     },
     "purse-first_2": {
@@ -473,17 +726,14 @@
         ]
       },
       "locked": {
-        "lastModified": 1783466370,
-        "narHash": "sha256-yyoiBIHQzL2Mb0iI5IcMtJS7qSOKw2ZH2WMe3eDTFpE=",
-        "owner": "amarbel-llc",
-        "repo": "purse-first",
-        "rev": "bc7607f4234866c55381715c1c127282653543e9",
-        "type": "github"
+        "lastModified": 1784650531,
+        "narHash": "sha256-gq3zaLsOR33Z3QaGkOANO5ASmCzmtwD5qfRperKzw5c=",
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/purse-first/archive/dbe6d87fc660ea8f673df38d8d7895699cc7b446.tar.gz"
       },
       "original": {
-        "owner": "amarbel-llc",
-        "repo": "purse-first",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/purse-first/archive/master.tar.gz"
       }
     },
     "root": {
@@ -491,9 +741,9 @@
         "chrest": "chrest",
         "crane": "crane",
         "igloo": "igloo",
-        "nixpkgs-master": "nixpkgs-master_2",
+        "nixpkgs-master": "nixpkgs-master",
         "tap": "tap",
-        "treefmt-nix": "treefmt-nix_3",
+        "treefmt-nix": "treefmt-nix",
         "utils": "utils"
       }
     },
@@ -505,11 +755,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1783488441,
-        "narHash": "sha256-jmWf+H3iC/0z7/mmvTovaJx1E/LME1QyHkyk+AFfJPk=",
+        "lastModified": 1784611586,
+        "narHash": "sha256-OfqgY+0hp/zseZB7uyH0U8kIDPS4scZZCyAurEplvG0=",
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "rev": "7dc3a177a239ed879c5581a80f6dc246c7e102f1",
+        "rev": "14f58845249f3552a89b07772626b8d3c632fa86",
         "type": "github"
       },
       "original": {
@@ -533,40 +783,15 @@
         "type": "github"
       }
     },
-    "systems_2": {
-      "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
-        "owner": "nix-systems",
-        "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-systems",
-        "repo": "default",
-        "type": "github"
-      }
-    },
-    "systems_3": {
-      "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
-        "owner": "nix-systems",
-        "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-systems",
-        "repo": "default",
-        "type": "github"
-      }
-    },
     "tap": {
       "inputs": {
-        "bats": "bats_2",
-        "crane": "crane_2",
+        "bats": [
+          "chrest",
+          "bats"
+        ],
+        "crane": [
+          "crane"
+        ],
         "gomod2nix": "gomod2nix_2",
         "igloo": [
           "igloo"
@@ -576,23 +801,22 @@
         ],
         "purse-first": "purse-first_2",
         "rust-overlay": "rust-overlay",
-        "treefmt-nix": "treefmt-nix_2",
+        "treefmt-nix": [
+          "treefmt-nix"
+        ],
         "utils": [
           "utils"
         ]
       },
       "locked": {
-        "lastModified": 1783517057,
-        "narHash": "sha256-Sjkt4kFYqwTGK7slrM5PzIKF3fq8yzNZm14jVZrARbI=",
-        "owner": "amarbel-llc",
-        "repo": "tap",
-        "rev": "4531c9f064d408f68963a5dc5198edc94e23c478",
-        "type": "github"
+        "lastModified": 1784652457,
+        "narHash": "sha256-gn2BcnsozkkwMoFnt7yy3xmAFGa1jXRKMV9G8vkNVg8=",
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/tap/archive/1eea67c52ea51dbea114ae677e57ab628b9f38ca.tar.gz"
       },
       "original": {
-        "owner": "amarbel-llc",
-        "repo": "tap",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/tap/archive/master.tar.gz"
       }
     },
     "tommy": {
@@ -600,6 +824,11 @@
         "bats": [
           "chrest",
           "bats"
+        ],
+        "conformist": [
+          "chrest",
+          "doppelgang",
+          "conformist"
         ],
         "igloo": [
           "chrest",
@@ -619,73 +848,28 @@
         ]
       },
       "locked": {
-        "lastModified": 1783165909,
-        "narHash": "sha256-t5EmNLP4FgQuPUWDPzLk/3pGSiCEG4K7Sp2oRd5swM8=",
-        "owner": "amarbel-llc",
-        "repo": "tommy",
-        "rev": "26a1a2ff809466061e839e2b4a4a6c66baccf19f",
-        "type": "github"
+        "lastModified": 1784648292,
+        "narHash": "sha256-rKGHO58SgsgTtxx9nTr9KChaqgd6O8v7XlfrvFQMwtE=",
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/tommy/archive/2b04a9c206878fef31e7abc1308d501ad179d290.tar.gz"
       },
       "original": {
-        "owner": "amarbel-llc",
-        "repo": "tommy",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://code.linenisgreat.com/tommy/archive/master.tar.gz"
       }
     },
     "treefmt-nix": {
       "inputs": {
         "nixpkgs": [
-          "chrest",
           "igloo"
         ]
       },
       "locked": {
-        "lastModified": 1780220602,
-        "narHash": "sha256-eynAfOmbmxJnkp7YewvCEbShNnnYJ9gLLqkzsYtBPeM=",
+        "lastModified": 1784369104,
+        "narHash": "sha256-47cxbcZODibHv3rELFQ9vZly0vUNkND/atn/U7HLeb0=",
         "owner": "numtide",
         "repo": "treefmt-nix",
-        "rev": "db947814a175b7ca6ded66e21383d938df01c227",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "treefmt-nix",
-        "type": "github"
-      }
-    },
-    "treefmt-nix_2": {
-      "inputs": {
-        "nixpkgs": [
-          "tap",
-          "igloo"
-        ]
-      },
-      "locked": {
-        "lastModified": 1780220602,
-        "narHash": "sha256-eynAfOmbmxJnkp7YewvCEbShNnnYJ9gLLqkzsYtBPeM=",
-        "owner": "numtide",
-        "repo": "treefmt-nix",
-        "rev": "db947814a175b7ca6ded66e21383d938df01c227",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "treefmt-nix",
-        "type": "github"
-      }
-    },
-    "treefmt-nix_3": {
-      "inputs": {
-        "nixpkgs": [
-          "igloo"
-        ]
-      },
-      "locked": {
-        "lastModified": 1780220602,
-        "narHash": "sha256-eynAfOmbmxJnkp7YewvCEbShNnnYJ9gLLqkzsYtBPeM=",
-        "owner": "numtide",
-        "repo": "treefmt-nix",
-        "rev": "db947814a175b7ca6ded66e21383d938df01c227",
+        "rev": "df3c0640565d04a0261253cdd89fce78ec50168a",
         "type": "github"
       },
       "original": {
@@ -696,7 +880,10 @@
     },
     "utils": {
       "inputs": {
-        "systems": "systems_3"
+        "systems": [
+          "igloo",
+          "systems"
+        ]
       },
       "locked": {
         "lastModified": 1731533236,

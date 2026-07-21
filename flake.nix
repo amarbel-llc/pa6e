@@ -3,16 +3,18 @@
 
   inputs = {
     igloo = {
-      url = "github:amarbel-llc/igloo";
+      url = "https://code.linenisgreat.com/igloo/archive/master.tar.gz";
       inputs.nixpkgs-master.follows = "nixpkgs-master";
       inputs.treefmt-nix.follows = "treefmt-nix";
     };
+    igloo.inputs.bun2nix.follows = "chrest/bun2nix";
     # nixpkgs-master is the SHA-pinned upstream anchor that eng's
     # update-nix-repos recipe cascades. Without this input the cascade
     # falls through to `nix flake update` on the floating `nixpkgs`
     # ref and churns flake.lock every run.
     nixpkgs-master.url = "github:NixOS/nixpkgs/567a49d1913ce81ac6e9582e3553dd90a955875f";
     utils.url = "https://flakehub.com/f/numtide/flake-utils/0.1.102";
+    utils.inputs.systems.follows = "igloo/systems";
 
     # `nix fmt` driver. Config lives in ./treefmt.nix.
     treefmt-nix = {
@@ -25,18 +27,23 @@
     # node and Determinate Nix 3.20 stops choking on bats.nix's POSIX
     # bracket regex on darwin. Mirrors amarbel-llc/eng@0fe43804.
     tap = {
-      url = "github:amarbel-llc/tap";
+      url = "https://code.linenisgreat.com/tap/archive/master.tar.gz";
       inputs.igloo.follows = "igloo";
       inputs.nixpkgs-master.follows = "nixpkgs-master";
       inputs.utils.follows = "utils";
     };
+    tap.inputs.bats.follows = "chrest/bats";
+    tap.inputs.crane.follows = "crane";
+    tap.inputs.treefmt-nix.follows = "treefmt-nix";
 
     chrest = {
-      url = "github:amarbel-llc/chrest";
+      url = "https://code.linenisgreat.com/chrest/archive/master.tar.gz";
       inputs.igloo.follows = "igloo";
       inputs.utils.follows = "utils";
       inputs.tap.follows = "tap";
     };
+    chrest.inputs.bun2nix.inputs.systems.follows = "igloo/systems";
+    chrest.inputs.nixpkgs-master.follows = "nixpkgs-master";
 
     # Incremental-artifact Rust builder. crane is library-only (its
     # own `inputs = {}`), so there is no nixpkgs follows to set — it
