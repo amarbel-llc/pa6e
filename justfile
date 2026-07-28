@@ -175,7 +175,7 @@ debug-version:
   just build >/dev/null
   {{justfile_directory()}}/result/bin/pa6e version
 
-# Render a markdown file through the full pipeline without printing.
+# render a markdown file through the full pipeline without printing
 [group("debug")]
 debug-render target='label.md':
   pandoc --output "{{target}}.html" --standalone --embed-resources --css peri-a6.css "{{target}}"
