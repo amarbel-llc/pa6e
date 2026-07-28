@@ -12,6 +12,8 @@ validate: validate-devshell validate-manpages
 # system tuple via `nix eval` keeps the recipe portable across linux /
 # darwin without depending on just's `os()` (which returns `macos`, not
 # nix's `darwin`).
+#
+# verify the devShell evaluates and builds without errors
 [group("pre-build")]
 validate-devshell:
   #!/usr/bin/env bash
@@ -22,6 +24,8 @@ validate-devshell:
 # scdoc syntax gate: building the pa6e-manpages derivation runs scdoc
 # over doc/*.1.scd in a sandbox, so a syntax error fails the build. No
 # scdoc-in-devshell needed.
+#
+# build the pa6e-manpages derivation to gate scdoc syntax
 [group("pre-build")]
 validate-manpages:
   nix build --print-build-logs --no-link ".#pa6e-manpages"
@@ -33,6 +37,8 @@ lint: lint-fmt
 # which runs treefmt against a /nix/store snapshot and fails if anything
 # would change. Does NOT modify the worktree — the modifying counterpart
 # is `codemod-fmt-treefmt`.
+#
+# check formatting without modifying the worktree
 [group("pre-build")]
 lint-fmt:
   #!/usr/bin/env bash
@@ -49,6 +55,8 @@ build: build-nix
 # every build goes through nix (crane). crane caches dependency
 # compilation in the Cargo.lock-keyed cargoArtifacts derivation, so only
 # pa6e's own crate recompiles on a source edit.
+#
+# build the wrapped binary through nix (crane)
 [group("build")]
 build-nix:
   nix build --show-trace
@@ -60,6 +68,8 @@ test: test-cargo
 
 # Run the test suite through nix (crane cargoTest, reusing the cached
 # cargoArtifacts). Mirror of the `checks.tests` flake output.
+#
+# run the Rust test suite through nix
 [group("post-build")]
 test-cargo:
   #!/usr/bin/env bash
@@ -71,6 +81,8 @@ test-cargo:
 
 # Run the wrapped binary with the pipeline tools (chrest/pandoc/magick/
 # ghostscript) on PATH. Usage: just run-nix print label.md
+#
+# run the wrapped binary with the pipeline tools on PATH
 run-nix *ARGS:
   nix run . -- {{ARGS}}
 
@@ -82,6 +94,8 @@ codemod-fmt: codemod-fmt-treefmt
 # Format all source files via treefmt-nix (rustfmt for Rust, nixfmt for
 # Nix, shfmt for shell/bats). Config lives in ./treefmt.nix; `nix fmt`
 # runs the same wrapper. The read-only counterpart is `lint-fmt`.
+#
+# rewrite formatting in place via treefmt-nix
 [group("codemod")]
 codemod-fmt-treefmt:
   nix fmt
@@ -93,6 +107,8 @@ codemod-fmt-treefmt:
 # source of truth (flake.nix reads it; the binary embeds it via
 # build.rs); Cargo.toml's version is inert at runtime but synced here so
 # the two never diverge. Usage: just bump-version 0.1.1
+#
+# set the version in version.env and rs/Cargo.toml
 [group("maintenance")]
 bump-version new_version:
   sed -E -i 's/^(export PA6E_VERSION)=.*/\1={{new_version}}/' version.env
@@ -102,6 +118,8 @@ bump-version new_version:
 # truth), so pass only the message. pa6e's nix package lives at repo root
 # (source in rs/ is just layout), so tags use the plain v prefix per
 # eng-versioning(7). Usage: just tag "feat: public send API"
+#
+# sign and push the v<version> tag read from version.env
 [group("maintenance")]
 tag message:
   #!/usr/bin/env bash
@@ -118,6 +136,8 @@ tag message:
 # bumping (so the release-bump commit is not in its own changelog), bumps
 # version.env + rs/Cargo.toml, commits, pushes master, signs+pushes the
 # v<version> tag, then publishes a GitHub release. Usage: just release 0.1.1
+#
+# cut a release: bump, commit, push, tag, and publish
 [group("maintenance")]
 release new_version:
   #!/usr/bin/env bash
@@ -146,6 +166,8 @@ release new_version:
 
 # Build the binary and print its version subcommand. Verifies build.rs
 # env injection (version + pinned component table).
+#
+# build the binary and print its version subcommand
 [group("debug")]
 debug-version:
   #!/usr/bin/env bash
