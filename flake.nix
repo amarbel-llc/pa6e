@@ -35,6 +35,7 @@
     tap.inputs.bats.follows = "chrest/bats";
     tap.inputs.crane.follows = "crane";
     tap.inputs.treefmt-nix.follows = "treefmt-nix";
+    tap.inputs.purse-first.follows = "chrest/purse-first";
 
     chrest = {
       url = "https://code.linenisgreat.com/chrest/archive/master.tar.gz";
@@ -44,6 +45,7 @@
     };
     chrest.inputs.bun2nix.inputs.systems.follows = "igloo/systems";
     chrest.inputs.nixpkgs-master.follows = "nixpkgs-master";
+    chrest.inputs.purse-first.inputs.gomod2nix.follows = "tap/gomod2nix";
 
     # Incremental-artifact Rust builder. crane is library-only (its
     # own `inputs = {}`), so there is no nixpkgs follows to set — it
